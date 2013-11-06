@@ -18,13 +18,19 @@ public class Player extends ObjectController implements UIListener{
     Collider coll;
     UIRegion interactRegion;
     Vector2 dir;
+    float drag = 25f;
+    float accel = 50;
+    float topSpeed = 15;
+    Vector2 vel;
+    
     //Vector2 location;
     
     final float speed = 6;
     
     public Player()
     {
-        Vector2 dir = Vector2.Zero();
+        dir = Vector2.Zero();
+        vel = Vector2.Zero();
         SpriteData temp = new SpriteData(1, 0, 0, 64, 128);
         drawer = new DrawComp(temp,-32,-116);
         interactRegion = new UIRegion(new Rectangle(-50000, -50000, 100000, 100000), 0, this);
@@ -35,9 +41,15 @@ public class Player extends ObjectController implements UIListener{
     
     public void update(float t)
     {
+        vel.add(Vector2.vecMult(t * accel, dir));
+        if(vel.length() < drag * t) 
+            vel.setLength(0);
+        else
+            vel.setLength(vel.length() - drag * t);
+        if(vel.length() > topSpeed) vel.setLength(topSpeed);
         //if(target != null)
         //{Collider.moveTowards(location, target, t * speed);}
-        coll.move(Vector2.vecMult(t * speed, dir));
+        coll.move(Vector2.vecMult(t, vel));
         drawer.move(coll.location);
     }
     
