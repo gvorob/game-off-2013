@@ -32,6 +32,7 @@ public class World implements UIListener{
     public ArrayList<ObjectController> controllers;
     public ArrayList<UIRegion> ui;
     public ArrayList<Attackable> attackables;
+    public ArrayList<Collider> colliders;
     
     public Player player;
     public DrawComp map;
@@ -80,6 +81,8 @@ public class World implements UIListener{
         ui = new ArrayList<UIRegion>();
         controllers = new ArrayList<ObjectController>();
         attackables = new ArrayList<Attackable>();
+        colliders = new ArrayList<Collider>();
+        Collider.colliders = colliders;
         
         w = this;
         
@@ -171,12 +174,16 @@ public class World implements UIListener{
     {attackables.add(a);}
     public void add(ObjectController o)
     {controllers.add(o);}
+    public void add(Collider c)
+    {colliders.add(c);}
     public void remove(DrawComp d)
     {while(drawComps.remove(d));}
     public void remove(UIRegion r)
     {while(ui.remove(r));}
     public void remove(Attackable a)
     {while(attackables.remove(a));}
+    public void remove(Collider c)
+    {while(colliders.remove(c));}
     
     public void informClicked(int i, Mouse m2)
     {

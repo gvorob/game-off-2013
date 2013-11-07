@@ -14,8 +14,8 @@ import java.awt.Rectangle;
  */
 public class Drone extends ObjectController{
     DrawComp drawer;
-    Vector2 location;
     Attackable att;
+    Collider coll;
     final float speed = 2;
     Vector2 target;
     
@@ -23,10 +23,10 @@ public class Drone extends ObjectController{
     {
         drawer = new DrawComp(new SpriteData(0,0,0,32,64), -15, -57);
         att = new Attackable(-8, -33, 19, 38, 500);
+        coll = new Collider(loc.clone(), 0.5f);
         World.w.add(att);
         World.w.add(drawer);
-        
-        location = loc.clone();
+        World.w.add(coll);
         target =  new Vector2(10,25);//location.clone();
     }
     
@@ -38,13 +38,13 @@ public class Drone extends ObjectController{
     
     public void update(float t)
     {
-        drawer.move(location);
+        drawer.move(coll.location);
         if(target != null)
         {
-            Collider.moveTowards(location, target,t * speed);
+            Collider.moveTowards(coll.location, target,t * speed);
         }
         Point UICorner = drawer.getPoint();
-        att.move(UICorner,location);
+        att.move(UICorner,coll.location);
         
     }
 

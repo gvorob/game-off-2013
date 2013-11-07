@@ -37,6 +37,7 @@ public class Player extends ObjectController implements UIListener{
         coll = new Collider(new Vector2(0,0),1);
         World.w.add(drawer);
         World.w.add(interactRegion);
+        World.w.add(coll);
     }
     
     public void update(float t)

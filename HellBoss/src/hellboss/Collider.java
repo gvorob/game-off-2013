@@ -4,11 +4,14 @@
  */
 package hellboss;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author George
  */
 public class Collider {//handles collisions, also basic movement
+    public static ArrayList<Collider> colliders;
     Vector2 location;
     float size;
     
@@ -35,6 +38,30 @@ public class Collider {//handles collisions, also basic movement
     
     public void move(Vector2 dir)
     {
-        location.vecAdd(dir);
+        location.vecAdd(dir); 
+        for(Collider c : colliders)
+        {
+            if(c.equals(this) || !checkCollide(c));
+            else
+            {
+                location = closestPointTo(c);
+                return;
+            }
+        }
     }
+    
+    public boolean checkCollide(Collider c)
+    {
+        return Vector2.vecSubt(location, c.location).length() < (size + c.size);
+    }
+    
+    public Vector2 closestPointTo(Collider c)//finds the closest place you can be to me
+    {
+        Vector2 temp = Vector2.vecSubt(location, c.location);
+        temp.setLength(c.size + size);
+        temp.add(c.location);
+        return temp;
+    }
+    
+    
 }
