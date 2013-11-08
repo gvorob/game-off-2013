@@ -21,9 +21,9 @@ public class Drone extends ObjectController{
     
     private void init(boolean blueTeam, UIListener l, Vector2 loc)
     {
-        drawer = new DrawComp(new SpriteData(0,0,0,32,64), -15, -57);
-        att = new Attackable(-8, -33, 19, 38, 500);
-        coll = new Collider(loc.clone(), 0.5f);
+        drawer = new DrawComp(new SpriteData(0,0,0,64,64), -32, -32);
+        att = new Attackable(500);
+        coll = new Collider(loc.clone(), 0.5f, att);
         World.w.add(att);
         World.w.add(drawer);
         World.w.add(coll);

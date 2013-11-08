@@ -31,10 +31,10 @@ public class Player extends ObjectController implements UIListener{
     {
         dir = Vector2.Zero();
         vel = Vector2.Zero();
-        SpriteData temp = new SpriteData(1, 0, 0, 64, 128);
-        drawer = new DrawComp(temp,-32,-116);
+        SpriteData temp = new SpriteData(1, 0, 0, 64, 64);
+        drawer = new DrawComp(temp,-32,-32);
         interactRegion = new UIRegion(new Rectangle(-50000, -50000, 100000, 100000), 0, this);
-        coll = new Collider(new Vector2(0,0),1);
+        coll = new Collider(true, new Vector2(0,0),1);
         World.w.add(drawer);
         World.w.add(interactRegion);
         World.w.add(coll);

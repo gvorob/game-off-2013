@@ -12,12 +12,8 @@ import java.awt.Rectangle;
  *
  * @author George
  */
-public class Attackable extends Component implements UIListener{
+public class Attackable extends Component{
     public static Player player;
-    //public UIRegion ui;
-    int xOffset;
-    int yOffset;
-    //public ClickListener parent;
     public Vector2 loc;
     public float size;
     
@@ -25,10 +21,8 @@ public class Attackable extends Component implements UIListener{
     public float maxHealth;
     
     
-    public Attackable(int x,int y, int w, int h, float maxH)
+    public Attackable(int maxH)
     {
-        xOffset = x;
-        yOffset = y;
         
         Color[] colors = new Color[3];
         colors[0] = new Color(0, 0, 0, 128);
@@ -62,12 +56,6 @@ public class Attackable extends Component implements UIListener{
                 return 0;
         }
     }
-
-    @Override
-    public void informClicked(int i, Mouse m) {
-        player.clickedOn(this, m);
-    }
-    
     public Vector2 getLoc()
     {
         return loc.clone();
