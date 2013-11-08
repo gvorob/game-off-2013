@@ -9,9 +9,9 @@ package hellboss;
  * @author George
  */
 public class Projectile extends ObjectController{
-    Attackable target;
-    Vector2 location;
-    Vector2 origin;
+    Collider coll;
+    Vector2 vel;
+    Vector2 tickVel;//distance travelled in a tick
     float speed;
     int damage;
     int damageType;
@@ -19,16 +19,14 @@ public class Projectile extends ObjectController{
     
     DrawComp drawer;
     
-    public Projectile(Attackable tar, int dam, int damt, float s, Vector2 loc)
+    public Projectile(Vector2 vel, int dam, int damt, Vector2 loc, float size)
     {
-        drawer = new DrawComp(new SpriteData(3,0,0,32,64), -15, -57);
-        target = tar;
+        coll = new Collider(false, loc, size);
+        drawer = new DrawComp(new SpriteData(3,0,0,64,64), -32, -32);
         damage = dam;
         damageType = damt;
-        location = loc;
-        origin = loc.clone();
-        speed = 10;//s;
-        
+        this.vel = vel;
+        tickVel = vel.clone();
         drawer.move(loc);
         //doBounce();
         World.w.add(drawer);
@@ -36,17 +34,10 @@ public class Projectile extends ObjectController{
     
     public void update(float t)
     {
-        Collider.moveTowards(location, target.getLoc(), speed * t);
-        target.getLoc();
-        drawer.move(location);
+        tickVel.setLength(vel.length() * t);
+        coll.move(tickVel);
+        drawer.move(coll.location);
         
-        //doBounce();
-        
-        if(target.getLoc().equals(location))
-        {
-            target.takeDamage(damageType, damage);
-            hit = true;
-        }
     }
     
     public boolean checkRemove()

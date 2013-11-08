@@ -67,21 +67,21 @@ public class Player extends ObjectController implements UIListener{
         switch(i)
         {
             case 0:
+                createProjectile(m.get());
                 //target = new Vector2((float)m.getX() / 16, (float)m.getY() / 16);
                 break;
         }
     }
-
-    public void clickedOn(Attackable att, Mouse m) {
-        if(!m.getL())
-        {
-            createProjectile(att);
-        }
-    }
     
-    private void createProjectile(Attackable att)
+    private void createProjectile(Point click)
     {
-        Projectile p = new Projectile(att, 100, 0, 50, coll.location.clone());
+        Vector2 temp = Vector2.fromPoint(click);
+        temp.vecMult(1f/16f);
+        temp.vecSubt(coll.location);
+        temp.setLength(-10);
+        vel.add(temp);
+        temp.setLength(-15);
+        Projectile p = new Projectile(temp, 100, 0, coll.location.clone(),0.5f);
         World.w.add(p);
     }
     
