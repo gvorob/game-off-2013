@@ -12,39 +12,33 @@ import java.awt.Rectangle;
  *
  * @author George
  */
-public class Drone extends ObjectController{
+public class Enemy extends ObjectController{
     DrawComp drawer;
     Attackable att;
     Collider coll;
     final float speed = 2;
     Vector2 target;
     
-    private void init(boolean blueTeam, UIListener l, Vector2 loc)
+    private void init(Vector2 loc)
     {
-        drawer = new DrawComp(new SpriteData(0,0,0,64,64), -32, -32);
+        drawer = new DrawComp(new SpriteData(0,0,0,64,64), -30, -31);
         att = new Attackable(500);
-        coll = new Collider(loc.clone(), 0.5f, att);
+        coll = new Collider(loc.clone(), 0.5f, att, Collider.density.SOFT, 5, 30, 1);
         World.w.add(att);
         World.w.add(drawer);
         World.w.add(coll);
         target =  new Vector2(10,25);//location.clone();
     }
     
-    public Drone(boolean blueTeam, UIListener l)
-    {init(blueTeam,l,new Vector2(10, blueTeam?0.5f:49.5f));}
-    
-    public Drone(boolean blueTeam, UIListener l, Vector2 loc)
-    {init(blueTeam,l,loc);}
+    public Enemy(Vector2 loc)
+    {init(loc);}
     
     public void update(float t)
     {
-        drawer.move(coll.location);
-        if(target != null)
-        {
-            Collider.moveTowards(coll.location, target,t * speed);
-        }
+        coll.physMove(new Vector2(0,1), t);
         Point UICorner = drawer.getPoint();
         att.move(UICorner,coll.location);
+        drawer.move(coll.location);
         
     }
 
@@ -57,5 +51,11 @@ public class Drone extends ObjectController{
     {
         att.remove();
         drawer.remove();
+        coll.remove();
+    }
+    
+    public Enemy clone()
+    {
+        return new Enemy(coll.location);
     }
 }

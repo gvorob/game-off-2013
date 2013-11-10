@@ -27,12 +27,17 @@ import javax.imageio.ImageIO;
 public class World implements UIListener{
     public static World w;
     
+    public static boolean DEBUG = true;
+    
     public Mouse mouse;
     public ArrayList<DrawComp> drawComps;
     public ArrayList<ObjectController> controllers;
     public ArrayList<UIRegion> ui;
     public ArrayList<Attackable> attackables;
     public ArrayList<Collider> colliders;
+    
+    public ArrayList<ObjectController>addQueue;//so that things added during the update loop are added at the end
+    boolean objectsLocked;
     
     public Player player;
     public DrawComp map;
@@ -62,6 +67,7 @@ public class World implements UIListener{
     public World(Mouse m)
     {
         mode = MODE_PLAY;
+        objectsLocked = false;
         //createUI(MODE_ASSEMBLE);
         //editTile = new Tile(0,0);
         try {
@@ -80,6 +86,7 @@ public class World implements UIListener{
         drawComps = new ArrayList<DrawComp>();
         ui = new ArrayList<UIRegion>();
         controllers = new ArrayList<ObjectController>();
+        addQueue = new ArrayList<ObjectController>();
         attackables = new ArrayList<Attackable>();
         colliders = new ArrayList<Collider>();
         Collider.colliders = colliders;
@@ -89,9 +96,15 @@ public class World implements UIListener{
         map = new DrawComp(new SpriteData(2, 0, 0, 640, 640), 0, 0);
         drawComps.add(map);
         player = new Player();
-        controllers.add(new Drone(true, player));
+        controllers.add(new Spawner(new Vector2(20,5), 10));
         controllers.add(player);
         Attackable.setPlayer(player);
+        
+        
+        colliders.add(new Collider(new Vector2(-5000,20), 5000, Collider.density.HARD));
+        colliders.add(new Collider(new Vector2(20,-5000), 5000, Collider.density.HARD));
+        colliders.add(new Collider(new Vector2(20,5040), 5000, Collider.density.HARD));
+        colliders.add(new Collider(new Vector2(5040,20), 5000, Collider.density.HARD));
         
     }
     
@@ -112,10 +125,17 @@ public class World implements UIListener{
         if(mode == MODE_PLAY)
         {
             player.processKeys(keys);
+            objectsLocked = true;
             for(ObjectController o : controllers)
             {
                 o.update(time);
             }
+            objectsLocked = false;
+            for(ObjectController o : addQueue)
+            {add(o);}
+            if(addQueue.size() > 0)
+                addQueue = new ArrayList<ObjectController>();
+            
             for(UIRegion r : ui)
             {
                 if(!flag)
@@ -152,6 +172,18 @@ public class World implements UIListener{
             Point p = d.getPoint();
             d.draw().drawSprite(g, p.x + d.refx, p.y + d.refy, sprites);
         }
+        if(DEBUG)
+        {
+            for(Collider c : colliders)
+            {
+                g.drawOval(
+                        (int)(c.location.x * 16 - c.size * 16),
+                        (int)(c.location.y * 16 - c.size * 16),
+                        (int)(c.size * 2 * 16),
+                        (int)(c.size * 2 * 16)
+                        );
+            }
+        }
         for(UIRegion r:ui)
         {
             r.draw(g);
@@ -173,7 +205,7 @@ public class World implements UIListener{
     public void add(Attackable a)
     {attackables.add(a);}
     public void add(ObjectController o)
-    {controllers.add(o);}
+    {if(objectsLocked)addQueue.add(o);else controllers.add(o);}
     public void add(Collider c)
     {colliders.add(c);}
     public void remove(DrawComp d)

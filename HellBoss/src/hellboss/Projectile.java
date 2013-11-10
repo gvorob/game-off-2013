@@ -19,9 +19,9 @@ public class Projectile extends ObjectController{
     
     DrawComp drawer;
     
-    public Projectile(Vector2 vel, int dam, int damt, Vector2 loc, float size)
+    public Projectile(Vector2 vel, int dam, int damt, Vector2 loc, float size, float mass)
     {
-        coll = new Collider(false, loc, size);
+        coll = new Collider(loc, size, null,Collider.density.NONE, mass, 0, 999);
         drawer = new DrawComp(new SpriteData(3,0,0,64,64), -32, -32);
         damage = dam;
         damageType = damt;
@@ -30,13 +30,27 @@ public class Projectile extends ObjectController{
         drawer.move(loc);
         //doBounce();
         World.w.add(drawer);
+        World.w.add(coll);
     }
     
     public void update(float t)
     {
         tickVel.setLength(vel.length() * t);
-        coll.move(tickVel);
+        coll.manualMove(tickVel);
+        Collider temp = coll.getColliderHere();
+        {
+            if(temp != null)
+            {
+                if(temp.att != null)
+                {
+                    vel.vecMult(coll.mass);
+                    temp.doImpulse(vel);
+                    hit = true;
+                }
+            }
+        }
         drawer.move(coll.location);
+        
         
     }
     
@@ -46,6 +60,7 @@ public class Projectile extends ObjectController{
     public void remove()
     {
         drawer.remove();
+        coll.remove();
     }
     
 }

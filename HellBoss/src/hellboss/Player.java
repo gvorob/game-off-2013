@@ -18,10 +18,6 @@ public class Player extends ObjectController implements UIListener{
     Collider coll;
     UIRegion interactRegion;
     Vector2 dir;
-    float drag = 25f;
-    float accel = 50;
-    float topSpeed = 15;
-    Vector2 vel;
     
     //Vector2 location;
     
@@ -30,11 +26,10 @@ public class Player extends ObjectController implements UIListener{
     public Player()
     {
         dir = Vector2.Zero();
-        vel = Vector2.Zero();
         SpriteData temp = new SpriteData(1, 0, 0, 64, 64);
         drawer = new DrawComp(temp,-32,-32);
         interactRegion = new UIRegion(new Rectangle(-50000, -50000, 100000, 100000), 0, this);
-        coll = new Collider(true, new Vector2(0,0),1);
+        coll = new Collider(new Vector2(0,0),0.7f,null,Collider.density.HARD, 10f,500f,15f);
         World.w.add(drawer);
         World.w.add(interactRegion);
         World.w.add(coll);
@@ -42,15 +37,9 @@ public class Player extends ObjectController implements UIListener{
     
     public void update(float t)
     {
-        vel.add(Vector2.vecMult(t * accel, dir));
-        if(vel.length() < drag * t) 
-            vel.setLength(0);
-        else
-            vel.setLength(vel.length() - drag * t);
-        if(vel.length() > topSpeed) vel.setLength(topSpeed);
+        coll.physMove(dir, t);
         //if(target != null)
         //{Collider.moveTowards(location, target, t * speed);}
-        coll.move(Vector2.vecMult(t, vel));
         drawer.move(coll.location);
     }
     
@@ -79,9 +68,9 @@ public class Player extends ObjectController implements UIListener{
         temp.vecMult(1f/16f);
         temp.vecSubt(coll.location);
         temp.setLength(-10);
-        vel.add(temp);
+        //vel.add(temp);
         temp.setLength(-15);
-        Projectile p = new Projectile(temp, 100, 0, coll.location.clone(),0.5f);
+        Projectile p = new Projectile(temp, 100, 0, coll.location.clone(),0.25f, 1);
         World.w.add(p);
     }
     
