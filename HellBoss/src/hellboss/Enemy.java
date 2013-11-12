@@ -22,8 +22,8 @@ public class Enemy extends ObjectController{
     private void init(Vector2 loc)
     {
         drawer = new DrawComp(new SpriteData(0,0,0,64,64), -30, -31);
-        att = new Attackable(500);
-        coll = new Collider(loc.clone(), 0.5f, att, Collider.density.SOFT, 5, 30, 1);
+        att = new Attackable(200);
+        coll = new Collider(loc.clone(), 0.5f, att, Collider.density.SOFT, 5, 30, 1, 2);
         World.w.add(att);
         World.w.add(drawer);
         World.w.add(coll);

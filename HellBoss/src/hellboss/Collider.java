@@ -22,10 +22,11 @@ public class Collider {//handles collisions, also basic movement
     float maxForce = 50;
     float topSpeed = 15;
     float mass;
+    int team; //0 = none, 1 = player, 2 = enemy
     Vector2 vel;
     
     
-    private void init(Vector2 loc, float s, Attackable a,density d, float mass, float force, float speed)
+    private void init(Vector2 loc, float s, Attackable a,density d, float mass, float force, float speed, int team)
     {
         vel = Vector2.Zero();
         location = loc;
@@ -35,16 +36,17 @@ public class Collider {//handles collisions, also basic movement
         this.mass = mass;
         maxForce = force;
         topSpeed = speed;
+        this.team = team;
     }
     
     public Collider( Vector2 loc, float s, density d)//stationary constructor
-    {init(loc,s,null,d, -1, 0, 0);}
+    {init(loc,s,null,d, -1, 0, 0, 0);}
     
     public Collider(Vector2 loc, float s, Attackable a, float speed)//basic enemy
-     {init(loc,s,a,density.SOFT, 1, speed, speed);}
+     {init(loc,s,a,density.SOFT, 1, speed, speed, 2);}
     
-    public Collider(Vector2 loc, float s, Attackable a,density d, float mass, float force, float speed)//full control
-    {init(loc,s,a,d, mass, force, speed);}
+    public Collider(Vector2 loc, float s, Attackable a,density d, float mass, float force, float speed, int team)//full control
+    {init(loc,s,a,d, mass, force, speed, team);}
     
     
     public static void moveTowards(Vector2 loc, Vector2 tar, float distance)

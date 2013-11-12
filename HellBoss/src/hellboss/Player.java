@@ -29,7 +29,7 @@ public class Player extends ObjectController implements UIListener{
         SpriteData temp = new SpriteData(1, 0, 0, 64, 64);
         drawer = new DrawComp(temp,-32,-32);
         interactRegion = new UIRegion(new Rectangle(-50000, -50000, 100000, 100000), 0, this);
-        coll = new Collider(new Vector2(0,0),0.7f,null,Collider.density.HARD, 10f,500f,15f);
+        coll = new Collider(new Vector2(0,0),0.7f,null,Collider.density.HARD, 10f,500f,15f,1);
         World.w.add(drawer);
         World.w.add(interactRegion);
         World.w.add(coll);
@@ -67,10 +67,11 @@ public class Player extends ObjectController implements UIListener{
         Vector2 temp = Vector2.fromPoint(click);
         temp.vecMult(1f/16f);
         temp.vecSubt(coll.location);
-        temp.setLength(-10);
+        temp.setLength(-100);
+        coll.doImpulse(temp);
         //vel.add(temp);
         temp.setLength(-15);
-        Projectile p = new Projectile(temp, 100, 0, coll.location.clone(),0.25f, 1);
+        Projectile p = new Projectile(temp, 100, 0, coll.location.clone(),0.25f, 1, 1);
         World.w.add(p);
     }
     

@@ -41,12 +41,11 @@ public class Attackable extends Component{
     
     public float takeDamage(int damageType, float damage)
     {
-        System.out.println("Ow");
-        System.out.println("-" + String.valueOf(damage));
-        System.out.println(maxHealth);
-        System.out.println(health);
-        
-        
+        //System.out.println("Ow");
+        //System.out.println("-" + String.valueOf(damage));
+        //System.out.println(maxHealth);
+        //System.out.println(health);
+
         switch(damageType)
         {
             case 0:
