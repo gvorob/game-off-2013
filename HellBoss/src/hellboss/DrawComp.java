@@ -12,7 +12,7 @@ import java.awt.image.BufferedImage;
  * @author George
  */
 public class DrawComp extends Component{
-    float x, y; 
+    float x, y, theta; 
     int refx, refy;
     SpriteData sprite;
     //boolean iso;
@@ -44,24 +44,6 @@ public class DrawComp extends Component{
     {
         return new Point((int)(16 * x),(int)(16 * y));
     }
-    //public boolean isIso()
-    //{return iso;}
-    
-    
-    //public Point fromIso()
-    //{return fromIso(x, y , z);}
-    
-    //public static Point fromIso(float x, float y, float z)
-    //{
-    //    int xcor = (int)(8 * x + 8 * y);
-    //    int ycor = (int)((4 * x) + (-4 * y) + (-8 * z));
-    //    return new Point(xcor, ycor);
-    //}
-    
-    //public static Vector2 toIso(int x, int y)
-    //{
-    //    return new Vector2(x/16.0f + y/8.0f, x/16.0f - y/8.0f);
-    //}
 
     void move(Vector2 location) {
         x = location.x;
@@ -72,4 +54,10 @@ public class DrawComp extends Component{
     {
         World.w.remove(this);
     }
+    
+    public void setRotate(float t)
+    {theta = t;}
+    
+    public float getRotate()
+    {return theta;}
 }

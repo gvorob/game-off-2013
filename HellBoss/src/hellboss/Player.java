@@ -37,6 +37,8 @@ public class Player extends ObjectController implements UIListener{
     
     public void update(float t)
     {
+        if(dir.length() != 0)
+        {drawer.setRotate(Angles.getAngle(dir));}
         coll.physMove(dir, t);
         //if(target != null)
         //{Collider.moveTowards(location, target, t * speed);}

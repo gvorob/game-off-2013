@@ -7,7 +7,6 @@ package hellboss;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
@@ -15,7 +14,6 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -112,11 +110,6 @@ public class World implements UIListener{
     {
     }
     
-    private void loadLevel()
-    {
-        
-    }
-    
     public void update(float time, Keyboard keys, Mouse m)//per-frame game updates
     {
         Point view = player.getView();
@@ -124,6 +117,9 @@ public class World implements UIListener{
         boolean flag = false;//used for click blocking for ui
         if(mode == MODE_PLAY)
         {
+            if(keys.getKeyPressed(KeyEvent.VK_P))
+            {DEBUG = !DEBUG;}
+            
             player.processKeys(keys);
             objectsLocked = true;
             for(ObjectController o : controllers)
@@ -170,7 +166,13 @@ public class World implements UIListener{
         {
             g.setColor(Color.red);
             Point p = d.getPoint();
+            g.translate(p.x, p.y);
+            g.rotate(d.getRotate());
+            g.translate(-1 * p.x, -1 * p.y);
             d.draw().drawSprite(g, p.x + d.refx, p.y + d.refy, sprites);
+            g.translate(p.x, p.y);
+            g.rotate(-1 * d.getRotate());
+            g.translate(-1 * p.x, -1 * p.y);
         }
         if(DEBUG)
         {
