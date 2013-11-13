@@ -34,6 +34,8 @@ public class World implements UIListener{
     public ArrayList<Attackable> attackables;
     public ArrayList<Collider> colliders;
     
+    public ArrayList<Vector2> canSpawns;
+    
     public ArrayList<ObjectController>addQueue;//so that things added during the update loop are added at the end
     boolean objectsLocked;
     
@@ -97,7 +99,7 @@ public class World implements UIListener{
         
         map = new DrawComp(new SpriteData(2, 0, 0, 1920, 1280), 0, 0);
         drawComps.add(map);
-        player = new Player();
+        player = new Player(new Vector2(60,60));
         controllers.add(new Spawner(new Vector2(20,5), 10));
         controllers.add(player);
         Attackable.setPlayer(player);

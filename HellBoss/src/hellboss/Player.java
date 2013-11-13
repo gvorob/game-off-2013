@@ -25,13 +25,13 @@ public class Player extends ObjectController implements UIListener{
     
     final float speed = 6;
     
-    public Player()
+    public Player(Vector2 loc)
     {
         dir = Vector2.Zero();
         SpriteData temp = new SpriteData(1, 0, 0, 64, 64);
         drawer = new DrawComp(temp,-32,-32);
         interactRegion = new UIRegion(new Rectangle(-50000, -50000, 100000, 100000), 0, this);
-        coll = new Collider(new Vector2(0,0),0.7f,null,Collider.density.HARD, 10f,500f,15f,1);
+        coll = new Collider(loc,0.7f,null,Collider.density.HARD, 10f,500f,15f,1);
         World.w.add(drawer);
         World.w.add(interactRegion);
         World.w.add(coll);

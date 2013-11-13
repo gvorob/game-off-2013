@@ -24,7 +24,7 @@ public class HellBoss implements TimerListener, KeyEventListener, MouseEventList
     
     public HellBoss()
     {
-        screen = new Screen(500, 500, "ElonCatod");
+        screen = new Screen(1000, 800, "HellBoss");
         timer = new Timer(10);
         timer.addListener(this);
         keys = new Keyboard();
