@@ -78,7 +78,7 @@ public class Collider {//handles collisions, also basic movement
         return null;
     }
     
-    public void physMove(Vector2 dir, float t)//moves using physics, target velocity at dir.length out of 1
+    public void noClipPhysMove(Vector2 dir, float t)//moves using physics, target velocity at dir.length out of 1
     {
         float oldSpeed = vel.length();
         dir.setLength(topSpeed);
@@ -100,7 +100,13 @@ public class Collider {//handles collisions, also basic movement
             else
                 vel.setLength(topSpeed);
         
-        move(Vector2.vecMult(t, vel));
+        manualMove(Vector2.vecMult(t, vel));
+    }
+    
+    public void physMove(Vector2 dir, float t)
+    {
+        noClipPhysMove(dir, t);
+        move(Vector2.Zero());
     }
     
     public void doImpulse(Vector2 impulse)
@@ -113,9 +119,12 @@ public class Collider {//handles collisions, also basic movement
     {
         location.vecAdd(dir);
         Collider temp = getColliderHere();
-        if(temp != null)
+        int count = 0;
+        while(temp != null && count < 10)
         {
+            count++;
             location = closestPointTo(temp);
+            temp = getColliderHere();
         }
     }
     

@@ -40,7 +40,10 @@ public class World implements UIListener{
     public Player player;
     public DrawComp map;
     
+    public ArrayList<Collider> mapColliders;//used for level saving
     
+    
+    public float collSize = 5;//used for the map-editor collider placement
     
     public static final int MODE_PLAY = 0;
     //public static final int MODE_EDITOR = 1;
@@ -87,11 +90,12 @@ public class World implements UIListener{
         addQueue = new ArrayList<ObjectController>();
         attackables = new ArrayList<Attackable>();
         colliders = new ArrayList<Collider>();
+        mapColliders = new ArrayList<Collider>();
         Collider.colliders = colliders;
         
         w = this;
         
-        map = new DrawComp(new SpriteData(2, 0, 0, 640, 640), 0, 0);
+        map = new DrawComp(new SpriteData(2, 0, 0, 1920, 1280), 0, 0);
         drawComps.add(map);
         player = new Player();
         controllers.add(new Spawner(new Vector2(20,5), 10));
@@ -99,15 +103,84 @@ public class World implements UIListener{
         Attackable.setPlayer(player);
         
         
-        colliders.add(new Collider(new Vector2(-5000,20), 5000, Collider.density.HARD));
-        colliders.add(new Collider(new Vector2(20,-5000), 5000, Collider.density.HARD));
-        colliders.add(new Collider(new Vector2(20,5040), 5000, Collider.density.HARD));
-        colliders.add(new Collider(new Vector2(5040,20), 5000, Collider.density.HARD));
+        colliders.add(new Collider(new Vector2(-10000,40), 10000, Collider.density.HARD));
+        colliders.add(new Collider(new Vector2(60,-10000), 10000, Collider.density.HARD));
+        colliders.add(new Collider(new Vector2(60,10080), 10000, Collider.density.HARD));
+        colliders.add(new Collider(new Vector2(10120,40), 10000, Collider.density.HARD));
+        
+        
+        loadLevel("in.txt");
+    }
+    
+    private void loadLevel(String fileName)
+    {
+        BufferedReader b = null;
+        try {
+            File f = new File(fileName);
+            b = new BufferedReader(new FileReader(f));
+            
+            float length = Float.parseFloat(b.readLine());
+            for(int i = 0;i< length;i++)
+            {
+                String[] line = b.readLine().split(",");
+                Collider temp = new Collider(
+                        new Vector2(Float.parseFloat(line[0]),Float.parseFloat(line[1])),
+                        Float.parseFloat(line[2]),
+                        Collider.density.WALL);
+                colliders.add(temp);
+                mapColliders.add(temp);
+            }
+            
+        }
+        catch(Exception ex)
+        {
+            Logger.getLogger(World.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                b.close();
+            } catch (IOException ex) {
+                Logger.getLogger(World.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
         
     }
     
-    private void createUI(int mode)
+    private void saveLevel()
     {
+        BufferedWriter out = null;
+        try //the opposite of parsetiles
+        {
+            out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("out.txt")));
+            out.write(String.valueOf(mapColliders.size()) + "\n");
+            for(Collider c : mapColliders)
+            {
+                out.write(
+                        String.valueOf(c.location.x) + "," +
+                        String.valueOf(c.location.y) + "," +
+                        String.valueOf(c.size) + "\n");
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(World.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                out.close();
+            } catch (IOException ex) {
+                Logger.getLogger(World.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+    
+    public void saveWorldImage()
+    {
+        BufferedImage b = new BufferedImage(1920, 1280, BufferedImage.TYPE_4BYTE_ABGR);
+        draw(b, new Point(0,0));
+        try {
+    // retrieve image
+            File outputfile = new File("saved.png");
+            ImageIO.write(b, "png", outputfile);
+        } catch (IOException e) {
+            Misc.prln("error writing world image to file");
+        }
     }
     
     public void update(float time, Keyboard keys, Mouse m)//per-frame game updates
@@ -117,6 +190,31 @@ public class World implements UIListener{
         boolean flag = false;//used for click blocking for ui
         if(mode == MODE_PLAY)
         {
+            if(DEBUG)
+            {
+                if(keys.getKeyPressed(KeyEvent.VK_O))
+                {
+                    Collider temp = new Collider(player.coll.location.clone(), collSize, Collider.density.WALL);
+                    colliders.add(temp);
+                    mapColliders.add(temp);
+                }
+                if(keys.getKeyPressed(KeyEvent.VK_N))
+                {player.swapNoClip();}
+                if(keys.getKeyPressed(KeyEvent.VK_OPEN_BRACKET))
+                {collSize -= 0.5; if(collSize <= 0)collSize = 0.1f;}
+                if(keys.getKeyPressed(KeyEvent.VK_CLOSE_BRACKET))
+                {collSize += 0.5;}
+                if(keys.getKeyPressed(KeyEvent.VK_MINUS))
+                {collSize -= 0.1; if(collSize <= 0)collSize = 0.1f;}
+                if(keys.getKeyPressed(KeyEvent.VK_EQUALS))
+                {collSize += 0.1;}
+                if(keys.getKeyPressed(KeyEvent.VK_0))
+                {saveLevel();}
+                if(keys.getKeyPressed(KeyEvent.VK_9))
+                {saveWorldImage();}
+            }
+            
+            
             if(keys.getKeyPressed(KeyEvent.VK_P))
             {DEBUG = !DEBUG;}
             
@@ -147,7 +245,7 @@ public class World implements UIListener{
             {
                 if(controllers.get(i).checkRemove())
                 {
-                    System.out.println("I AM DEAD");
+                    //System.out.println("I AM DEAD");
                     controllers.get(i).remove();//run destructors
                     controllers.remove(i);
                 }
@@ -155,13 +253,10 @@ public class World implements UIListener{
         }
     }
     
-    public void draw(BufferedImage b)
+    public void draw(BufferedImage b, Point view)
     {
         Graphics2D g = b.createGraphics();
-        Point view = player.getView();
-        AffineTransform at = new AffineTransform();
-        at.translate(-1 * view.x, -1 * view.y);
-        g.setTransform(at);
+        g.translate(-1 * view.x, -1 * view.y);
         for(DrawComp d : drawComps)
         {
             g.setColor(Color.red);
@@ -185,6 +280,12 @@ public class World implements UIListener{
                         (int)(c.size * 2 * 16)
                         );
             }
+            
+            g.drawOval(
+                    (int)((player.coll.location.x - collSize) * 16),
+                    (int)((player.coll.location.y - collSize) * 16), 
+                    (int)(collSize * 2 * 16), 
+                    (int)(collSize * 2 * 16));
         }
         for(UIRegion r:ui)
         {

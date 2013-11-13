@@ -19,6 +19,8 @@ public class Player extends ObjectController implements UIListener{
     UIRegion interactRegion;
     Vector2 dir;
     
+    boolean noClip = false;
+    
     //Vector2 location;
     
     final float speed = 6;
@@ -39,7 +41,12 @@ public class Player extends ObjectController implements UIListener{
     {
         if(dir.length() != 0)
         {drawer.setRotate(Angles.getAngle(dir));}
-        coll.physMove(dir, t);
+        if(!noClip)
+            coll.physMove(dir, t);
+        else
+        {
+            coll.noClipPhysMove(dir, t);
+        }
         //if(target != null)
         //{Collider.moveTowards(location, target, t * speed);}
         drawer.move(coll.location);
@@ -90,4 +97,7 @@ public class Player extends ObjectController implements UIListener{
         {dir.x += 1;}
         dir.normalize();
     }
+    
+    public void swapNoClip()
+    {noClip = !noClip;}
 }

@@ -43,7 +43,7 @@ public class HellBoss implements TimerListener, KeyEventListener, MouseEventList
     public void timerEvent() {
         screen.clear();
         world.update((float)timer.interval / 1000, keys, mouse);
-        world.draw(screen.buffer);
+        world.draw(screen.buffer, world.player.getView());
         screen.flushBuffer();
     }
 
