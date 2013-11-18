@@ -27,6 +27,11 @@ public class World implements UIListener{
     
     public static boolean DEBUG = true;
     
+    public enum editMode
+    {
+        WALL,CANSPAWN,REMOVEWALL
+    }
+    
     public Mouse mouse;
     public ArrayList<DrawComp> drawComps;
     public ArrayList<ObjectController> controllers;
@@ -34,18 +39,19 @@ public class World implements UIListener{
     public ArrayList<Attackable> attackables;
     public ArrayList<Collider> colliders;
     
-    public ArrayList<Vector2> canSpawns;
     
     public ArrayList<ObjectController>addQueue;//so that things added during the update loop are added at the end
     boolean objectsLocked;
     
     public Player player;
+    public GooCan can;
     public DrawComp map;
     
     public ArrayList<Collider> mapColliders;//used for level saving
     
     
     public float collSize = 5;//used for the map-editor collider placement
+    public editMode edit;
     
     public static final int MODE_PLAY = 0;
     //public static final int MODE_EDITOR = 1;
@@ -71,6 +77,7 @@ public class World implements UIListener{
     {
         mode = MODE_PLAY;
         objectsLocked = false;
+        edit = editMode.WALL;
         //createUI(MODE_ASSEMBLE);
         //editTile = new Tile(0,0);
         try {
@@ -100,6 +107,8 @@ public class World implements UIListener{
         map = new DrawComp(new SpriteData(2, 0, 0, 1920, 1280), 0, 0);
         drawComps.add(map);
         player = new Player(new Vector2(60,60));
+        can = new GooCan(new Vector2(-100,-100));
+        controllers.add(can);
         controllers.add(new Spawner(new Vector2(20,5), 10));
         controllers.add(player);
         Attackable.setPlayer(player);
@@ -121,8 +130,8 @@ public class World implements UIListener{
             File f = new File(fileName);
             b = new BufferedReader(new FileReader(f));
             
-            float length = Float.parseFloat(b.readLine());
-            for(int i = 0;i< length;i++)
+            float length = Integer.parseInt(b.readLine());
+            for(int i = 0;i< length;i++)//reads in all the walls
             {
                 String[] line = b.readLine().split(",");
                 Collider temp = new Collider(
@@ -131,6 +140,13 @@ public class World implements UIListener{
                         Collider.density.WALL);
                 colliders.add(temp);
                 mapColliders.add(temp);
+            }
+            length = Integer.parseInt(b.readLine());
+            for(int i = 0;i < length; i++)
+            {
+                String[] line = b.readLine().split(",");
+                Vector2 temp = new Vector2(Float.parseFloat(line[0]),Float.parseFloat(line[1]));
+                can.canSpawns.add(temp);
             }
             
         }
@@ -160,6 +176,13 @@ public class World implements UIListener{
                         String.valueOf(c.location.x) + "," +
                         String.valueOf(c.location.y) + "," +
                         String.valueOf(c.size) + "\n");
+            }
+            out.write(String.valueOf(can.canSpawns.size()) + "\n");
+            for(Vector2 v: can.canSpawns)
+            {
+                out.write(
+                        String.valueOf(v.x) + "," +
+                        String.valueOf(v.y) + "\n");
             }
         } catch (IOException ex) {
             Logger.getLogger(World.class.getName()).log(Level.SEVERE, null, ex);
@@ -194,11 +217,39 @@ public class World implements UIListener{
         {
             if(DEBUG)
             {
+                if(keys.getKeyPressed(KeyEvent.VK_BACK_SLASH))
+                {
+                    if(edit == editMode.CANSPAWN)edit = editMode.REMOVEWALL;
+                    else if(edit == editMode.REMOVEWALL)edit = editMode.WALL;
+                    else if(edit == editMode.WALL)edit = editMode.CANSPAWN;
+                }
                 if(keys.getKeyPressed(KeyEvent.VK_O))
                 {
-                    Collider temp = new Collider(player.coll.location.clone(), collSize, Collider.density.WALL);
-                    colliders.add(temp);
-                    mapColliders.add(temp);
+                    if(edit == editMode.WALL)
+                    {
+                        Collider temp = new Collider(player.coll.location.clone(), collSize, Collider.density.WALL);
+                        colliders.add(temp);
+                        mapColliders.add(temp);
+                    }
+                    if(edit == editMode.CANSPAWN)
+                    {can.canSpawns.add(player.coll.location.clone());}
+                    if(edit == editMode.REMOVEWALL)
+                    {
+                        Collider first = null;
+                        for(Collider c: mapColliders)
+                        {
+                            if(player.coll.checkCollide(c))
+                            {
+                                first = c;
+                                break;
+                            }
+                        }
+                        if(first != null)
+                        {
+                            mapColliders.remove(first);
+                            first.remove();
+                        }
+                    }
                 }
                 if(keys.getKeyPressed(KeyEvent.VK_N))
                 {player.swapNoClip();}
@@ -271,8 +322,26 @@ public class World implements UIListener{
             g.rotate(-1 * d.getRotate());
             g.translate(-1 * p.x, -1 * p.y);
         }
+        g.drawString(String.valueOf(player.canCount), view.x  + 400, view.y  + 16);
         if(DEBUG)
         {
+            switch(edit)
+            {
+                case WALL:
+                    g.drawString("Adding walls", view.x, view.y + 20);
+                    g.drawOval(
+                            (int)((player.coll.location.x - collSize) * 16),
+                            (int)((player.coll.location.y - collSize) * 16), 
+                            (int)(collSize * 2 * 16), 
+                            (int)(collSize * 2 * 16));
+                    break;
+                case REMOVEWALL:
+                    g.drawString("Removing walls", view.x, view.y + 20);
+                    break;
+                case CANSPAWN:
+                    g.drawString("Placing Can Spawn Locations", view.x, view.y + 20);
+                    break;
+            }
             for(Collider c : colliders)
             {
                 g.drawOval(
@@ -282,12 +351,13 @@ public class World implements UIListener{
                         (int)(c.size * 2 * 16)
                         );
             }
+            for(Vector2 v: can.canSpawns)
+            {
+                g.setColor(Color.blue);
+                g.drawLine((int)(v.x * 16) - 16,(int)(v.y * 16), (int)(v.x * 16) + 16, (int)(v.y * 16));
+                g.drawLine((int)(v.x * 16),(int)(v.y * 16) - 16, (int)(v.x * 16), (int)(v.y * 16) + 16);
+            }
             
-            g.drawOval(
-                    (int)((player.coll.location.x - collSize) * 16),
-                    (int)((player.coll.location.y - collSize) * 16), 
-                    (int)(collSize * 2 * 16), 
-                    (int)(collSize * 2 * 16));
         }
         for(UIRegion r:ui)
         {

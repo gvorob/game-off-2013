@@ -24,7 +24,7 @@ public class Player extends ObjectController implements UIListener{
     //Vector2 location;
     
     final float speed = 6;
-    
+    public int canCount;
     public Player(Vector2 loc)
     {
         dir = Vector2.Zero();
@@ -100,4 +100,7 @@ public class Player extends ObjectController implements UIListener{
     
     public void swapNoClip()
     {noClip = !noClip;}
+    
+    public void getCan()
+    {canCount++;}
 }
