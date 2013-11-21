@@ -18,6 +18,7 @@ public class Player extends ObjectController implements UIListener{
     Collider coll;
     UIRegion interactRegion;
     Vector2 dir;
+    Gun gun;
     
     boolean noClip = false;
     
@@ -27,6 +28,7 @@ public class Player extends ObjectController implements UIListener{
     public int canCount;
     public Player(Vector2 loc)
     {
+	gun = new Gun();
         dir = Vector2.Zero();
         SpriteData temp = new SpriteData(1, 0, 0, 64, 64);
         drawer = new DrawComp(temp,-32,-32);
@@ -73,15 +75,8 @@ public class Player extends ObjectController implements UIListener{
     
     private void createProjectile(Point click)
     {
-        Vector2 temp = Vector2.fromPoint(click);
-        temp.vecMult(1f/16f);
-        temp.vecSubt(coll.location);
-        temp.setLength(-100);
-        coll.doImpulse(temp);
-        //vel.add(temp);
-        temp.setLength(-15);
-        Projectile p = new Projectile(temp, 100, 0, coll.location.clone(),0.25f, 1, 1);
-        World.w.add(p);
+	gun.fire(click, coll);
+
     }
     
     public void processKeys(Keyboard keys)
