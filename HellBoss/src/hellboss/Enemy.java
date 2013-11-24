@@ -13,16 +13,15 @@ import java.util.Random;
  * @author George
  */
 public class Enemy extends ObjectController{
-    DrawComp drawer;
-    Attackable att;
-    Collider coll;
-    final float speed = 2;
-    Vector2 target;
-    static Random r = new Random();
+    protected DrawComp drawer;
+    protected Attackable att;
+    protected Collider coll;
+    protected final float speed = 2;
+    protected static Random r = new Random();
     
-    private static ArrayList<Enemy> enemies = new ArrayList<Enemy>();
+    protected static ArrayList<Enemy> enemies = new ArrayList<Enemy>();
     
-    private void init(Vector2 loc)
+    protected void init(Vector2 loc)
     {
         drawer = new DrawComp(new SpriteData(0,0,0,64,64), -30, -31);
         att = new Attackable(200);
@@ -31,7 +30,7 @@ public class Enemy extends ObjectController{
         World.w.add(drawer);
         World.w.add(coll);
         enemies.add(this);
-        target =  new Vector2(10,25);//location.clone();
+        //target =  new Vector2(10,25);//location.clone();
     }
     
     public Enemy(Vector2 loc)
@@ -54,8 +53,7 @@ public class Enemy extends ObjectController{
         moveTarget.setLength(1);
         
         coll.physMove(moveTarget, t);
-        Point UICorner = drawer.getPoint();
-        att.move(UICorner,coll.location);
+        att.move(coll.location);
         drawer.move(coll.location);
         
     }

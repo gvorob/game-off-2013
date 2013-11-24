@@ -33,7 +33,7 @@ public class Attackable extends Component{
         //parent = p;
     }
     
-    public void move(Point screenP,Vector2 worldP)
+    public void move(Vector2 worldP)
     {
         //ui.region.setLocation(screenP.x + xOffset, screenP.y + yOffset);
         loc = worldP;

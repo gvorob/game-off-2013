@@ -1,6 +1,8 @@
 package hellboss;
 
-public class Gun{
+import java.awt.Point;
+
+public class Mutation{
 
     public void fire(Point click, Collider coll){
         Vector2 temp = Vector2.fromPoint(click);

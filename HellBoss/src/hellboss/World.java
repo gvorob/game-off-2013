@@ -110,6 +110,7 @@ public class World implements UIListener{
         can = new GooCan(new Vector2(-100,-100));
         controllers.add(can);
         controllers.add(new Spawner(new Vector2(20,5), 3));
+        controllers.add(new BanditSpawner(new Vector2(60,5), 15));
         controllers.add(player);
         Attackable.setPlayer(player);
         

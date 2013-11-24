@@ -18,7 +18,7 @@ public class Player extends ObjectController implements UIListener{
     Collider coll;
     UIRegion interactRegion;
     Vector2 dir;
-    Gun gun;
+    Mutation gun;
     
     boolean noClip = false;
     
@@ -28,7 +28,7 @@ public class Player extends ObjectController implements UIListener{
     public int canCount;
     public Player(Vector2 loc)
     {
-	gun = new Gun();
+	gun = new Mutation();
         dir = Vector2.Zero();
         SpriteData temp = new SpriteData(1, 0, 0, 64, 64);
         drawer = new DrawComp(temp,-32,-32);
