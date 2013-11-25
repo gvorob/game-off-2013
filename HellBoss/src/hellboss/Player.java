@@ -18,7 +18,9 @@ public class Player extends ObjectController implements UIListener{
     Collider coll;
     UIRegion interactRegion;
     Vector2 dir;
-    Mutation gun;
+    Mutation mutation;
+    
+    Attackable att;
     
     boolean noClip = false;
     
@@ -28,12 +30,14 @@ public class Player extends ObjectController implements UIListener{
     public int canCount;
     public Player(Vector2 loc)
     {
-	gun = new Mutation();
+	mutation = new Mutation();
         dir = Vector2.Zero();
         SpriteData temp = new SpriteData(1, 0, 0, 64, 64);
         drawer = new DrawComp(temp,-32,-32);
         interactRegion = new UIRegion(new Rectangle(-50000, -50000, 100000, 100000), 0, this);
-        coll = new Collider(loc,0.7f,null,Collider.density.HARD, 10f,500f,15f,1);
+        att = new Attackable(100);
+        coll = new Collider(loc,0.7f,att,Collider.density.HARD, 10f,500f,15f,1);
+        World.w.add(att);
         World.w.add(drawer);
         World.w.add(interactRegion);
         World.w.add(coll);
@@ -52,6 +56,12 @@ public class Player extends ObjectController implements UIListener{
         //if(target != null)
         //{Collider.moveTowards(location, target, t * speed);}
         drawer.move(coll.location);
+        
+        if(! att.alive())
+        {
+            drawer.sprite.spriteX = 128;
+            drawer.setRotate(0);
+        }
     }
     
     public Point getView()
@@ -64,6 +74,8 @@ public class Player extends ObjectController implements UIListener{
 
     @Override
     public void informClicked(int i, Mouse m) {
+        if(!att.alive())
+            return;
         switch(i)
         {
             case 0:
@@ -75,13 +87,15 @@ public class Player extends ObjectController implements UIListener{
     
     private void createProjectile(Point click)
     {
-	gun.fire(click, coll);
+	mutation.fire(click, coll);
 
     }
     
     public void processKeys(Keyboard keys)
     {
         dir = Vector2.Zero();
+        if(!att.alive())
+            return;
         if(keys.getKey(KeyEvent.VK_W))
         {dir.y -= 1;}
         if(keys.getKey(KeyEvent.VK_A))

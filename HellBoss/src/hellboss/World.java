@@ -5,6 +5,8 @@
 package hellboss;
 
 import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
@@ -25,7 +27,7 @@ import javax.imageio.ImageIO;
 public class World implements UIListener{
     public static World w;
     
-    public static boolean DEBUG = true;
+    public static boolean DEBUG = false;
     
     public enum editMode
     {
@@ -93,6 +95,13 @@ public class World implements UIListener{
         
         mouse = m;
         
+        w = this;
+        
+        init();
+    }
+    
+    private void init()
+    {
         drawComps = new ArrayList<DrawComp>();
         ui = new ArrayList<UIRegion>();
         controllers = new ArrayList<ObjectController>();
@@ -102,7 +111,6 @@ public class World implements UIListener{
         mapColliders = new ArrayList<Collider>();
         Collider.colliders = colliders;
         
-        w = this;
         
         map = new DrawComp(new SpriteData(2, 0, 0, 1920, 1280), 0, 0);
         drawComps.add(map);
@@ -271,6 +279,10 @@ public class World implements UIListener{
             
             if(keys.getKeyPressed(KeyEvent.VK_P))
             {DEBUG = !DEBUG;}
+            if(!player.att.alive() && keys.getKeyPressed(KeyEvent.VK_R))
+            {
+                init();
+            }
             
             player.processKeys(keys);
             objectsLocked = true;
@@ -365,8 +377,27 @@ public class World implements UIListener{
             r.draw(g);
         }
         //entities = new ArrayList<Entity>();
+        if(!player.att.alive())
+            {
+                g.setFont(new Font("Arial", Font.BOLD, 20));
+                g.setColor(Color.BLACK);
+                FontMetrics f = g.getFontMetrics();
+                
+                g.drawString(
+                        "SHIT, YOU DEAD", 
+                        view.x + 250 - f.stringWidth("SHIT, YOU DEAD") / 2, 
+                        view.y + 250 - f.getHeight() / 2 );
+                g.setFont(new Font("Arial",Font.BOLD,12));
+                f = g.getFontMetrics();
+                g.drawString(
+                        "'R' to restart", 
+                        view.x + 250 - f.stringWidth("'R' to restart") / 2, 
+                        view.y + 250 - f.getHeight() / 2  + 40);
+                
+            }
         if(mode == MODE_PLAY)
         {
+            
         }
          
     }

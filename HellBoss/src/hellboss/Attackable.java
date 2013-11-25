@@ -65,7 +65,7 @@ public class Attackable extends Component{
 
     public boolean alive() 
     {
-        return health <= 0;
+        return health > 0;
     }
     
     public void remove()

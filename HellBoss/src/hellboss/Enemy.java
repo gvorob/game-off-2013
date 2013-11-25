@@ -60,7 +60,7 @@ public class Enemy extends ObjectController{
 
     public boolean checkRemove()
     {
-        return att.alive();
+        return !att.alive();
     }
     
     public void remove()

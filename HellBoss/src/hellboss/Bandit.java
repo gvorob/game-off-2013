@@ -99,7 +99,7 @@ public class Bandit extends Enemy{
         coll.doImpulse(temp);
         //vel.add(temp);
         temp.setLength(-15);
-        Projectile p = new Projectile(temp, 100, 0, coll.location.clone(),0.25f, 1, 2);
+        Projectile p = new Projectile(temp, 100, 0, coll.location.clone(),0.5f, 1, 2);
         World.w.add(p);
         
         cooldown = 3;
