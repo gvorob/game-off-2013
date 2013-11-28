@@ -24,13 +24,13 @@ public class UIRegion {
     
     public UIListener parent;
     
-    private void init(Rectangle rect, int id, Color[] c, UIListener listener, boolean block, boolean vis)
+    protected void init(Rectangle rect, int id, Color[] c, UIListener listener, boolean block, boolean vis)
     {
         region = rect;
         uiid = id;
         colors = c;
         parent = listener;
-        visible = vis; 
+        visible = vis;
         blocksClick = block;
     }
     
@@ -40,6 +40,8 @@ public class UIRegion {
     {init(rect,id,c,listener,true,true);}
     public UIRegion(Rectangle rect, int id, UIListener listener)
     {init(rect,id,null,listener,true,false);}
+    public UIRegion(Rectangle rect, int id, Color[] c,UIListener listener, boolean block, boolean vis)
+    {init(rect,id,c,listener,block,vis);}
     
     public boolean update(Mouse m)
     {
