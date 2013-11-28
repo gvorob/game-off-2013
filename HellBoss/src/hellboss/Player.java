@@ -30,13 +30,14 @@ public class Player extends ObjectController implements UIListener{
     public int canCount;
     public Player(Vector2 loc)
     {
-	mutation = new Mutation();
+	mutation = new Mutation(this);
         dir = Vector2.Zero();
         SpriteData temp = new SpriteData(1, 0, 0, 64, 64);
         drawer = new DrawComp(temp,-32,-32);
         interactRegion = new UIRegion(new Rectangle(-50000, -50000, 100000, 100000), 0, this);
         att = new Attackable(100);
         coll = new Collider(loc,0.7f,att,Collider.density.HARD, 10f,500f,15f,1);
+        mutation.mutate();
         World.w.add(att);
         World.w.add(drawer);
         World.w.add(interactRegion);
@@ -111,5 +112,8 @@ public class Player extends ObjectController implements UIListener{
     {noClip = !noClip;}
     
     public void getCan()
-    {canCount++;}
+    {
+        canCount++;
+        mutation.mutate();
+    }
 }

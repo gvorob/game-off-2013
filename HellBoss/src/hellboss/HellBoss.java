@@ -11,9 +11,12 @@ package hellboss;
 public class HellBoss implements TimerListener, KeyEventListener, MouseEventListener
 {
     
+    public static HellBoss s;
+    
     public static void main(String[] args) {
         
-        HellBoss e = new HellBoss();
+        s = new HellBoss();
+        s.timer.start();
     }
     
     public Screen screen;
@@ -36,7 +39,6 @@ public class HellBoss implements TimerListener, KeyEventListener, MouseEventList
         
         world = new World(mouse);
         
-        timer.start();
     }
 
     @Override

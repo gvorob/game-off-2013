@@ -5,6 +5,7 @@
 package hellboss;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
@@ -27,6 +28,8 @@ import javax.imageio.ImageIO;
 public class World implements UIListener{
     public static World w;
     
+    public static final float worldWidth = 120;
+    public static final float worldHeight = 80;
     public static boolean DEBUG = false;
     
     public enum editMode
@@ -97,10 +100,10 @@ public class World implements UIListener{
         
         w = this;
         
-        init();
+        startGame();
     }
     
-    private void init()
+    private void startGame()
     {
         drawComps = new ArrayList<DrawComp>();
         ui = new ArrayList<UIRegion>();
@@ -209,6 +212,11 @@ public class World implements UIListener{
         BufferedImage b = new BufferedImage(1920, 1280, BufferedImage.TYPE_4BYTE_ABGR);
         draw(b, new Point(0,0));
         try {
+            Thread.sleep(1000);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(World.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
     // retrieve image
             File outputfile = new File("saved.png");
             ImageIO.write(b, "png", outputfile);
@@ -220,6 +228,15 @@ public class World implements UIListener{
     public void update(float time, Keyboard keys, Mouse m)//per-frame game updates
     {
         Point view = player.getView();
+        
+        if(!DEBUG)
+        {
+            Dimension dim = HellBoss.s.screen.c.getSize();
+            if(view.x < 0) view.x = 0;
+            if(view.y < 0) view.y = 0;
+            if(view.x + dim.width > worldWidth * 16) view.x = (int)(worldWidth * 16) - dim.width;
+            if(view.y + dim.height > worldHeight * 16) view.y = (int)(worldHeight * 16) - dim.height;
+        }
         
         boolean flag = false;//used for click blocking for ui
         if(mode == MODE_PLAY)
@@ -281,7 +298,7 @@ public class World implements UIListener{
             {DEBUG = !DEBUG;}
             if(!player.att.alive() && keys.getKeyPressed(KeyEvent.VK_R))
             {
-                init();
+                startGame();
             }
             
             player.processKeys(keys);
@@ -321,6 +338,15 @@ public class World implements UIListener{
     
     public void draw(BufferedImage b, Point view)
     {
+        if(!DEBUG)
+        {
+            Dimension dim = HellBoss.s.screen.c.getSize();
+            if(view.x < 0) view.x = 0;
+            if(view.y < 0) view.y = 0;
+            if(view.x + dim.width > worldWidth * 16) view.x = (int)(worldWidth * 16) - dim.width;
+            if(view.y + dim.height > worldHeight * 16) view.y = (int)(worldHeight * 16) - dim.height;
+        }
+        
         Graphics2D g = b.createGraphics();
         g.translate(-1 * view.x, -1 * view.y);
         for(DrawComp d : drawComps)

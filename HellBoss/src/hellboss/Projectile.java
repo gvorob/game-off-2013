@@ -20,19 +20,33 @@ public class Projectile extends ObjectController{
     
     DrawComp drawer;
     
-    public Projectile(Vector2 vel, int dam, int damt, Vector2 loc, float size, float mass, int team)
+    public Projectile(Vector2 vel, int dam, int damt, Vector2 loc, float size, float mass, int team, DrawComp d)
     {
         coll = new Collider(loc, size, null,Collider.density.NONE, mass, 0, 999, team);
-        drawer = new DrawComp(new SpriteData(3,0,0,64,64), -32, -32);
+        drawer = d;
         damage = dam;
         damageType = damt;
         this.vel = vel;
         tickVel = vel.clone();
-        drawer.move(loc);
+        Vector2 temp = vel.clone();
+        temp.setLength(2f);
+        coll.manualMove(temp);
+        drawer.move(coll.location);
+        drawer.setRotate(Angles.getAngle(vel));
         //doBounce();
         World.w.add(drawer);
         World.w.add(coll);
         this.team = team;
+    }
+    
+    public static Projectile BanditBullet(Vector2 vel, Vector2 loc)
+    {
+        return new Projectile(vel, 100, 0, loc,0.1f, 1, 2,new DrawComp(new SpriteData(3,64,0,64,64), -32, -32));
+    }
+    
+    public static Projectile PlayerBullet(Vector2 vel, Vector2 loc)
+    {
+        return new Projectile(vel, 100, 0, loc ,1f, 2, 1,new DrawComp(new SpriteData(3,0,0,64,64), -32, -32));
     }
     
     public void update(float t)
