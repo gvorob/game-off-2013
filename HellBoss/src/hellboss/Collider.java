@@ -124,8 +124,18 @@ public class Collider {//handles collisions, also basic movement
         {
             count++;
             location = closestPointTo(temp);
+            if(temp.dense == density.WALL)
+                cancelVelAgainst(temp);
             temp = getColliderHere();
         }
+    }
+    
+    public void cancelVelAgainst(Collider c)
+    {
+        Vector2 tempVel = Vector2.vecSubt(c.location, location);
+        tempVel.setLength(1);
+        tempVel.setLength(tempVel.x * vel.x + tempVel.y * vel.y);
+        vel.vecSubt(tempVel);
     }
     
     public boolean checkCollide(Collider c)

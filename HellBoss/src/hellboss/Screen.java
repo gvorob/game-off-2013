@@ -50,6 +50,7 @@ public class Screen implements ImageObserver
             public void windowDeactivated(WindowEvent e) {}
         });
         f.setSize(x, y);
+        f.setResizable(false);
         f.validate();
         f.setVisible(true);
         Insets i = f.getInsets();

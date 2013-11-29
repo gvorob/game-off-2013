@@ -7,8 +7,10 @@ package hellboss;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.FontFormatException;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
+import java.awt.GraphicsEnvironment;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
@@ -32,6 +34,8 @@ public class World implements UIListener{
     public static final float worldWidth = 120;
     public static final float worldHeight = 80;
     public static boolean DEBUG = false;
+    
+    public static Font font;
     
     public enum editMode
     {
@@ -81,6 +85,14 @@ public class World implements UIListener{
     
     public World(Mouse m)
     {
+        try {
+            font = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/images/prstartk.ttf"));
+        } catch (Exception e)
+        {
+            Misc.prln("error loading font");
+        }
+        
+        
         mode = MODE_PLAY;
         objectsLocked = false;
         edit = editMode.WALL;
@@ -420,7 +432,13 @@ public class World implements UIListener{
                 g.rotate(-1 * d.getRotate());
                 g.translate(-1 * p.x, -1 * p.y);
             }
-            g.drawString(String.valueOf(player.canCount), view.x  + 400, view.y  + 16);
+            //player.canCount = 123;
+            g.setFont(font.deriveFont(Font.PLAIN, 12f));
+            int tempWidth = g.getFontMetrics().stringWidth(String.valueOf(player.canCount));
+            g.setColor(Color.lightGray);
+            g.fillRect(view.x + 494 - tempWidth, view.y, tempWidth + 6, 18);
+            g.setColor(Color.BLACK);
+            g.drawString(String.valueOf(player.canCount), view.x  + 497 - tempWidth, view.y  + 14);
             if(DEBUG)
             {
                 switch(edit)
@@ -464,7 +482,8 @@ public class World implements UIListener{
             //entities = new ArrayList<Entity>();
             if(!player.att.alive())
                 {
-                    g.setFont(new Font("Arial", Font.BOLD, 20));
+                    g.setFont(font.deriveFont(24f));
+                    
                     g.setColor(Color.BLACK);
                     FontMetrics f = g.getFontMetrics();
 
@@ -472,7 +491,7 @@ public class World implements UIListener{
                             "SHIT, YOU DEAD", 
                             view.x + 250 - f.stringWidth("SHIT, YOU DEAD") / 2, 
                             view.y + 250 - f.getHeight() / 2 );
-                    g.setFont(new Font("Arial",Font.BOLD,12));
+                    g.setFont(font.deriveFont(18f));
                     f = g.getFontMetrics();
                     g.drawString(
                             "'R' to restart", 
