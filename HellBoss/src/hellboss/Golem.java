@@ -4,15 +4,11 @@
  */
 package hellboss;
 
-import java.awt.Point;
-import java.util.Random;
-
 /**
  *
  * @author George
  */
-public class Bandit extends Enemy{
-    
+public class Golem extends Enemy{
     Vector2 target;
     float timeLeft;
     
@@ -21,16 +17,16 @@ public class Bandit extends Enemy{
     
     protected void init(Vector2 loc)
     {
-        drawer = new SpriteDrawer(new SpriteData(0,64,0,64,64), -32, -29);
-        att = new Attackable(200);
-        coll = new Collider(loc.clone(), 0.75f, att, Collider.density.SOFT, 5, 30, 5, 2);
+        drawer = new SpriteDrawer(new SpriteData(0,128,0,64,64), -32, -32);
+        att = new Attackable(400);
+        coll = new Collider(loc.clone(), 1.2f, att, Collider.density.SOFT, 25, 80, 3, 2);
         World.w.add(att);
         World.w.add(drawer);
         World.w.add(coll);
         enemies.add(this);
     }
     
-    public Bandit(Vector2 loc)
+    public Golem(Vector2 loc)
     {
         super(loc);
     }
@@ -43,12 +39,12 @@ public class Bandit extends Enemy{
             //Misc.prln("target not null");
             timeLeft -= t;
             Vector2 moveTarget = Vector2.vecSubt(target, coll.location);
-            if(moveTarget.length() < 2f || timeLeft < 0)
+            if(moveTarget.length() < 1f || timeLeft < 0)
             {
             //Misc.prln("arrived");
                 target = null;
                 coll.physMove(Vector2.Zero(), t);
-                timeLeft = r.nextFloat() * 2 + 1;
+                timeLeft = r.nextFloat() * 3 + 2;
             }
             else
             {
@@ -65,9 +61,10 @@ public class Bandit extends Enemy{
             if(timeLeft < 0)
             {
             //Misc.prln("done standing");
-                target = Vector2.fromAngle(r.nextFloat() * 2 * (float)Math.PI, r.nextFloat() * 3 + 5);
+                target = Vector2.fromAngle(r.nextFloat() * 2 * (float)Math.PI, r.nextFloat() * 2 + 3);
+                drawer.setRotate(Angles.getAngle(target));
                 target.vecAdd(coll.location);
-                timeLeft = r.nextFloat() *3 + 2;
+                timeLeft = r.nextFloat() * 3 + 2;
             }
         }
         
@@ -88,15 +85,15 @@ public class Bandit extends Enemy{
     
     void fire()
     {
-        Vector2 temp = Vector2.vecSubt(World.w.player.coll.location, coll.location);
-        temp.setLength(-15);
-        coll.doImpulse(temp);
-        //vel.add(temp);
-        temp.setLength(-15);
-        Projectile p = Projectile.BanditBullet(temp, coll.location.clone());//new Projectile(temp, 100, 0, coll.location.clone(),0.5f, 1, 2);
-        World.w.add(p);
+        World.w.add(Projectile.createShockwave(coll.location, 2));
+//        Vector2 temp = Vector2.vecSubt(World.w.player.coll.location, coll.location);
+//        temp.setLength(-15);
+//        coll.doImpulse(temp);
+//        //vel.add(temp);
+//        temp.setLength(-15);
+//        Projectile p = Projectile.BanditBullet(temp, coll.location.clone());//new Projectile(temp, 100, 0, coll.location.clone(),0.5f, 1, 2);
+//        World.w.add(p);
         
         cooldown = 3;
     }
-    
 }

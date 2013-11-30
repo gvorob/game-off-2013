@@ -22,6 +22,8 @@ public class Mutation{
         temp.setLength(-30);
         Projectile p = Projectile.PlayerBullet(temp, coll.location.clone());
         World.w.add(p);
+        //Projectile p = Projectile.createShockwave(coll.location.clone(), 1);
+        //World.w.add(p);
     }
     
     public void mutate()

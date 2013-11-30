@@ -78,6 +78,17 @@ public class Collider {//handles collisions, also basic movement
         return null;
     }
     
+    public ArrayList<Collider> getCollidersHere()
+    {//returns only tangible collider which collide with this one
+        ArrayList<Collider> temp = new ArrayList<Collider>();
+        for(Collider c : colliders)
+        {
+            if(!c.equals(this) && c.dense!=density.NONE && checkCollide(c))
+                temp.add(c);
+        }
+        return temp;
+    }
+    
     public void noClipPhysMove(Vector2 dir, float t)//moves using physics, target velocity at dir.length out of 1
     {
         float oldSpeed = vel.length();
@@ -113,6 +124,11 @@ public class Collider {//handles collisions, also basic movement
     {
         impulse.vecMult(1 / mass);
         vel.add(impulse);
+    }
+    
+    public void setSpeed(Vector2 vel)
+    {
+        this.vel.assign(vel);
     }
     
     public void move(Vector2 dir)//
@@ -152,6 +168,10 @@ public class Collider {//handles collisions, also basic movement
         return temp;
     }
     
+    public boolean vulnerable()
+    {
+        return att == null || att.vulnerable();
+    }
     
     public void remove()
     {

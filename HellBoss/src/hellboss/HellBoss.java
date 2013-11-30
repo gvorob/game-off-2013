@@ -16,7 +16,14 @@ public class HellBoss implements TimerListener, KeyEventListener, MouseEventList
     public static void main(String[] args) {
         
         s = new HellBoss();
-        s.timer.start();
+        long time = System.currentTimeMillis() - 1;
+        while(true)
+        {
+            long temp = System.currentTimeMillis() - time;
+            time = System.currentTimeMillis();
+            s.run((float)temp / 1000f);
+        }
+        //s.timer.start();
     }
     
     public Screen screen;
@@ -28,7 +35,7 @@ public class HellBoss implements TimerListener, KeyEventListener, MouseEventList
     public HellBoss()
     {
         screen = new Screen(500, 500, "HellBoss");
-        timer = new Timer(10);
+        timer = new Timer(1);
         timer.addListener(this);
         keys = new Keyboard();
         mouse = new Mouse();
@@ -40,13 +47,18 @@ public class HellBoss implements TimerListener, KeyEventListener, MouseEventList
         world = new World(mouse);
         
     }
+    
+    public void run(float t)
+    {
+        screen.clear();
+        world.update(t, keys, mouse);
+        world.draw(screen.buffer);
+        screen.flushBuffer();
+    }
 
     @Override
     public void timerEvent() {
-        screen.clear();
-        world.update((float)timer.interval / 1000, keys, mouse);
-        world.draw(screen.buffer);
-        screen.flushBuffer();
+        run((float)timer.interval / 1000);
     }
 
     @Override

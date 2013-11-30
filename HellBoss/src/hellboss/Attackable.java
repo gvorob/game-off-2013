@@ -20,10 +20,11 @@ public class Attackable extends Component{
     public float health;
     public float maxHealth;
     
+    public float invincibilityTime;
+    
     
     public Attackable(int maxH)
     {
-        
         Color[] colors = new Color[3];
         colors[0] = new Color(0, 0, 0, 128);
         colors[1] = new Color(100, 100, 100, 128);
@@ -39,26 +40,32 @@ public class Attackable extends Component{
         loc = worldP;
     }
     
+    public void update(float t)
+    {invincibilityTime -= t; if(invincibilityTime<0)invincibilityTime = 0;}
+    
     public float takeDamage(int damageType, float damage)
     {
-        //System.out.println("Ow");
-        //System.out.println("-" + String.valueOf(damage));
-        //System.out.println(maxHealth);
-        //System.out.println(health);
-
-        switch(damageType)
+        if(vulnerable())
         {
-            case 0:
-                health -= damage;
-                return damage;
-            default:
-                return 0;
+            switch(damageType)
+            {
+                case 0:
+                    health -= damage;
+                    invincibilityTime = 0.2f;
+                    return damage;
+                default:
+                    return 0;
+            }
         }
+        return 0;
     }
     public Vector2 getLoc()
     {
         return loc.clone();
     }
+    
+    public boolean vulnerable()
+    {return invincibilityTime <= 0;}
     
     public static void setPlayer(Player p)
     {player =  p;}

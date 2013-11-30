@@ -20,6 +20,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -55,7 +56,7 @@ public class World implements UIListener{
     
     public Player player;
     public GooCan can;
-    public DrawComp map;
+    public SpriteDrawer map;
     
     public ArrayList<Collider> mapColliders;//used for level saving
     
@@ -80,8 +81,9 @@ public class World implements UIListener{
     public int viewX = 250;
     public int viewY = 250;
     
-    //private int editx,edity,editz;
-    //private Tile editTile,editAlt;//editAlt is the tile currently under the cursor, used for swapping-out reasons
+    public static int frames;
+    public static float time;
+    public static int fps;
     
     public World(Mouse m)
     {
@@ -121,7 +123,7 @@ public class World implements UIListener{
     {
         mode = MODE_MENU;
         drawComps = new ArrayList<DrawComp>();
-        drawComps.add(new DrawComp(new SpriteData(4, 0, 0, 500, 500)));
+        drawComps.add(new SpriteDrawer(new SpriteData(4, 0, 0, 500, 500)));
         ui = new ArrayList<UIRegion>();
         SpriteData[] tempSprite = new SpriteData[3];
         tempSprite[0] = new SpriteData(4,   0, 500, 300, 100);
@@ -149,13 +151,22 @@ public class World implements UIListener{
         Collider.colliders = colliders;
         
         
-        map = new DrawComp(new SpriteData(2, 0, 0, 1920, 1280), 0, 0);
+        map = new SpriteDrawer(new SpriteData(2, 0, 0, 1920, 1280), 0, 0);
         drawComps.add(map);
         player = new Player(new Vector2(60,60));
         can = new GooCan(new Vector2(-100,-100));
         controllers.add(can);
-        controllers.add(new Spawner(new Vector2(20,5), 3));
-        controllers.add(new BanditSpawner(new Vector2(60,5), 15));
+        controllers.add(new Spawner(new Vector2(26,24),  3,Spawner.SLIME));
+        controllers.add(new Spawner(new Vector2(65,57),  3,Spawner.SLIME));
+        controllers.add(new Spawner(new Vector2(46,71), 15, Spawner.BANDIT));
+        controllers.add(new Spawner(new Vector2(60, 5), 15, Spawner.BANDIT));
+        controllers.add(new Spawner(new Vector2(118, 51), 15, Spawner.BANDIT));
+        controllers.add(new Spawner(new Vector2(15,45), 15, Spawner.GOLEM));
+        controllers.add(new Spawner(new Vector2(87,69), 15, Spawner.GOLEM));
+        controllers.add(new Spawner(new Vector2(111,27), 15, Spawner.GOLEM));
+        controllers.add(new Spawner(new Vector2( 8, 7), 15, Spawner.RAT));
+        controllers.add(new Spawner(new Vector2(19,76), 15, Spawner.RAT));
+        controllers.add(new Spawner(new Vector2(84,18), 15, Spawner.RAT));
         controllers.add(player);
         Attackable.setPlayer(player);
         
@@ -261,6 +272,14 @@ public class World implements UIListener{
     
     public void update(float time, Keyboard keys, Mouse m)//per-frame game updates
     {
+        World.time += time;
+        frames += 1;
+        if(World.time > 1)
+        {
+            World.time -= 1;
+            fps = frames;
+            frames = 0;
+        }
         if(mode == MODE_PLAY)
         {
             updateWorld(time, keys, m);
@@ -352,9 +371,7 @@ public class World implements UIListener{
         player.processKeys(keys);
         objectsLocked = true;
         for(ObjectController o : controllers)
-        {
-            o.update(time);
-        }
+        {o.update(time);}
         objectsLocked = false;
         for(ObjectController o : addQueue)
         {add(o);}
@@ -395,9 +412,10 @@ public class World implements UIListener{
             Graphics2D g = b.createGraphics();
             for(DrawComp d : drawComps)
             {
-                g.setColor(Color.red);
-                Point p = d.getPoint();
-                d.draw().drawSprite(g, p.x + d.refx, p.y + d.refy, sprites);
+                d.draw(sprites,new Point(0,0),g);
+                //g.setColor(Color.red);
+                //Point p = d.getPoint();
+                //d.draw().drawSprite(g, p.x + d.refx, p.y + d.refy, sprites);
             }
             for(UIRegion r: ui)
             {
@@ -422,15 +440,16 @@ public class World implements UIListener{
             g.translate(-1 * view.x, -1 * view.y);
             for(DrawComp d : drawComps)
             {
-                g.setColor(Color.red);
-                Point p = d.getPoint();
-                g.translate(p.x, p.y);
-                g.rotate(d.getRotate());
-                g.translate(-1 * p.x, -1 * p.y);
-                d.draw().drawSprite(g, p.x + d.refx, p.y + d.refy, sprites);
-                g.translate(p.x, p.y);
-                g.rotate(-1 * d.getRotate());
-                g.translate(-1 * p.x, -1 * p.y);
+                d.draw(sprites,view,g);
+                //g.setColor(Color.red);
+                //Point p = d.getPoint();
+                //g.translate(p.x, p.y);
+                //g.rotate(d.getRotate());
+                //g.translate(-1 * p.x, -1 * p.y);
+                //d.draw().drawSprite(g, p.x + d.refx, p.y + d.refy, sprites);
+                //g.translate(p.x, p.y);
+                //g.rotate(-1 * d.getRotate());
+                //g.translate(-1 * p.x, -1 * p.y);
             }
             //player.canCount = 123;
             g.setFont(font.deriveFont(Font.PLAIN, 12f));
@@ -441,6 +460,7 @@ public class World implements UIListener{
             g.drawString(String.valueOf(player.canCount), view.x  + 497 - tempWidth, view.y  + 14);
             if(DEBUG)
             {
+                g.setColor(Color.red);
                 switch(edit)
                 {
                     case WALL:
@@ -473,6 +493,8 @@ public class World implements UIListener{
                     g.drawLine((int)(v.x * 16) - 16,(int)(v.y * 16), (int)(v.x * 16) + 16, (int)(v.y * 16));
                     g.drawLine((int)(v.x * 16),(int)(v.y * 16) - 16, (int)(v.x * 16), (int)(v.y * 16) + 16);
                 }
+                g.drawString(player.coll.location.toString(), view.x, view.y + 34);
+                g.drawString("FPS:" + fps, view.x, view.y + 50);
 
             }
             for(UIRegion r:ui)

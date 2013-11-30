@@ -12,11 +12,18 @@ public class Spawner extends ObjectController{
     float interval;
     float timeToSpawn;
     Vector2 loc;
+    int type;
     
-    public Spawner(Vector2 loc, float interv)
+    public static final int SLIME = 0;
+    public static final int BANDIT = 1;
+    public static final int GOLEM = 2;
+    public static final int RAT = 3;
+    
+    public Spawner(Vector2 loc, float interv, int type)
     {
         this.loc = loc;
         interval = interv;
+        this.type = type;
     }
     
     public void update(float t)
@@ -31,6 +38,20 @@ public class Spawner extends ObjectController{
     
     public void spawn()
     {
-        World.w.add(new Enemy(loc));
+        switch(type)
+        {
+            case SLIME:
+                World.w.add(new Slime(loc));                
+                break;
+            case BANDIT:
+                World.w.add(new Bandit(loc));
+                break;
+            case GOLEM:
+                World.w.add(new Golem(loc));
+                break;
+            case RAT:
+                World.w.add(new Rat(loc));
+                break;
+        }
     }
 }

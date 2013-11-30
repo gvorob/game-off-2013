@@ -166,4 +166,10 @@ public class Vector2 {
     {
         return Vector2.vecSubt(a, b).length();
     }
+    
+    public void assign(Vector2 other)
+    {
+        x = other.x;
+        y = other.y;
+    }
 }

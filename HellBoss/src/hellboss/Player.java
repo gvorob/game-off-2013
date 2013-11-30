@@ -14,11 +14,12 @@ import java.awt.event.KeyEvent;
  * @author George
  */
 public class Player extends ObjectController implements UIListener{
-    DrawComp drawer;
+    SpriteDrawer drawer;
     Collider coll;
     UIRegion interactRegion;
     Vector2 dir;
     Mutation mutation;
+    //TouchProjectile touchAttack;
     
     Attackable att;
     
@@ -33,19 +34,22 @@ public class Player extends ObjectController implements UIListener{
 	mutation = new Mutation(this);
         dir = Vector2.Zero();
         SpriteData temp = new SpriteData(1, 0, 0, 64, 64);
-        drawer = new DrawComp(temp,-32,-32);
+        drawer = new SpriteDrawer(temp,-32,-32);
         interactRegion = new UIRegion(new Rectangle(-50000, -50000, 100000, 100000), 0, this);
         att = new Attackable(100);
         coll = new Collider(loc,0.7f,att,Collider.density.HARD, 10f,500f,15f,1);
         mutation.mutate();
+        //touchAttack = new TouchProjectile(100, 0, 100, coll);
         World.w.add(att);
-        World.w.add(drawer);
+        World.w.add((DrawComp)drawer);
         World.w.add(interactRegion);
         World.w.add(coll);
+        //World.w.add(touchAttack);
     }
     
     public void update(float t)
     {
+        att.update(t);
         if(dir.length() != 0)
         {drawer.setRotate(Angles.getAngle(dir));}
         if(!noClip)
@@ -63,6 +67,7 @@ public class Player extends ObjectController implements UIListener{
             drawer.sprite.spriteX = 128;
             drawer.setRotate(0);
         }
+        //touchAttack.updateColl(coll);
     }
     
     public Point getView()
