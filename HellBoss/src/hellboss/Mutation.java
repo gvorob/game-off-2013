@@ -26,6 +26,17 @@ public class Mutation{
         //World.w.add(p);
     }
     
+    public void update()
+    {
+        if(lastMutation == 0 && p.att.health < 1000 && p.att.health > 1)
+        {
+            p.drawer.sprite.spriteX = 320;
+            p.att.health = 1;
+            p.coll.size = 1.2f;
+            World.w.add(Projectile.createExplosionShockwave(p.coll.location));
+        }
+    }
+    
     public void mutate()
     {
         lastMutation++;
@@ -35,17 +46,19 @@ public class Mutation{
         {
             case 0:
                 p.coll.mass = 50;
-                p.coll.maxForce = 600;
+                p.coll.maxForce = 750;
                 p.coll.topSpeed = 10;
-                p.coll.size = 1.2f;
+                p.coll.size = 1.4f;
                 p.drawer.sprite.spriteX = 64 * 3;
+                p.att.health = 1000;
                 break;
             case 1:
                 p.coll.mass = 8;
                 p.coll.maxForce = 250;
                 p.coll.topSpeed = 18;
-                p.coll.size = 0.7f;
+                p.coll.size = 0.5f;
                 p.drawer.sprite.spriteX = 0;
+                p.att.health = 1;
                 break;
             case 2:
                 p.coll.mass = 1;
@@ -53,6 +66,7 @@ public class Mutation{
                 p.coll.topSpeed = 30;
                 p.coll.size = 0.25f;
                 p.drawer.sprite.spriteX = 64 * 4;
+                p.att.health = 1;
                 break;
         }
         

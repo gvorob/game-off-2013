@@ -18,8 +18,9 @@ public class Golem extends Enemy{
     protected void init(Vector2 loc)
     {
         drawer = new SpriteDrawer(new SpriteData(0,128,0,64,64), -32, -32);
+        drawer.move(loc);
         att = new Attackable(400);
-        coll = new Collider(loc.clone(), 1.2f, att, Collider.density.SOFT, 25, 80, 3, 2);
+        coll = new Collider(loc.clone(), 1.6f, att, Collider.density.SOFT, 25, 80, 3, 2);
         World.w.add(att);
         World.w.add(drawer);
         World.w.add(coll);

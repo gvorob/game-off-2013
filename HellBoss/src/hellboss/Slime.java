@@ -10,13 +10,17 @@ package hellboss;
  */
 public class Slime extends Enemy{
     private TouchProjectile touchAttack;
+    float angle;
     
     protected void init(Vector2 loc)
     {
-        drawer = new SpriteDrawer(new SpriteData(0,0,0,64,64), -30, -31);
+        drawer = new SpriteDrawer(new SpriteData(0,0,0,64,64), -32, -32);
+        drawer.move(loc);
         att = new Attackable(200);
         coll = new Collider(loc.clone(), 0.8f, att, Collider.density.SOFT, 5, 30, 5, 2);
         touchAttack = new TouchProjectile(30, 0, 10, coll);
+        angle = r.nextFloat() * 2 * (float)Math.PI;
+        drawer.setRotate(angle);
         World.w.add(touchAttack);
         World.w.add(att);
         World.w.add(drawer);
@@ -30,6 +34,8 @@ public class Slime extends Enemy{
     
     public void update(float t)
     {
+        angle += r.nextFloat() * t * 2 - t;
+        drawer.setRotate(angle);
         touchAttack.updateColl(coll);
         att.update(t);
         Vector2 moveTarget = new Vector2(0,0);

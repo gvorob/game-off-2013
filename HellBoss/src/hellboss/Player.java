@@ -36,7 +36,7 @@ public class Player extends ObjectController implements UIListener{
         SpriteData temp = new SpriteData(1, 0, 0, 64, 64);
         drawer = new SpriteDrawer(temp,-32,-32);
         interactRegion = new UIRegion(new Rectangle(-50000, -50000, 100000, 100000), 0, this);
-        att = new Attackable(100);
+        att = new Attackable(1);
         coll = new Collider(loc,0.7f,att,Collider.density.HARD, 10f,500f,15f,1);
         mutation.mutate();
         //touchAttack = new TouchProjectile(100, 0, 100, coll);
@@ -49,6 +49,7 @@ public class Player extends ObjectController implements UIListener{
     
     public void update(float t)
     {
+        mutation.update();
         att.update(t);
         if(dir.length() != 0)
         {drawer.setRotate(Angles.getAngle(dir));}

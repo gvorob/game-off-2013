@@ -44,7 +44,12 @@ public class Projectile extends ObjectController{
     
     public static Shockwave createShockwave(Vector2 loc, int team)
     {
-        return new Shockwave(40, 0, 40,loc, team, 0.3f, 1, 4);
+        return new Shockwave(40, 0, 40,loc, team, 0.2f, 1.6f, 5f);
+    }
+    
+    public static Shockwave createExplosionShockwave(Vector2 loc)
+    {
+        return new Shockwave(9999, 0, 0, loc, 1, 0.1f, 0, 20);
     }
     
     public void update(float t)
