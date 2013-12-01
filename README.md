@@ -9,5 +9,3 @@ Click to shoot
 
 ![screenshot](screenshot.png)
 
-##Note:
-Well, it turns out applets were created by malevolent spirits to torture innocent coders. Couldn't get it to work with signing or whatever, so this doesn't meet the requirements of the game-off. Shucks.
