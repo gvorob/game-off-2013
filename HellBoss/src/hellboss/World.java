@@ -7,20 +7,16 @@ package hellboss;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.FontFormatException;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
-import java.awt.GraphicsEnvironment;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
-import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -177,7 +173,7 @@ public class World implements UIListener{
         colliders.add(new Collider(new Vector2(10120,40), 10000, Collider.density.HARD));
         
         
-        loadLevel("in.txt");
+        loadLevel("/in.txt");
     }
     
     private void loadLevel(String fileName)
@@ -185,8 +181,8 @@ public class World implements UIListener{
         BufferedReader b = null;
         try {
             File f = new File(fileName);
-            b = new BufferedReader(new FileReader(f));
-            
+            //b = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(fileName)));
+            b = LevelContents.getData();
             float length = Integer.parseInt(b.readLine());
             for(int i = 0;i< length;i++)//reads in all the walls
             {
@@ -508,11 +504,20 @@ public class World implements UIListener{
                     
                     g.setColor(Color.BLACK);
                     FontMetrics f = g.getFontMetrics();
-
+                    if(player.canCount == 1)
+                        g.drawString(
+                            "YOU GOT " + player.canCount + " BARREL", 
+                            view.x + 250 - f.stringWidth("YOU GOT " + player.canCount + " BARREL") / 2, 
+                            view.y + 250 - f.getHeight() / 2  - 18);
+                    else
+                        g.drawString(
+                            "YOU GOT " + player.canCount + " BARRELS", 
+                            view.x + 250 - f.stringWidth("YOU GOT " + player.canCount + " BARRELS") / 2, 
+                            view.y + 250 - f.getHeight() / 2  - 18);
                     g.drawString(
-                            "SHIT, YOU DEAD", 
-                            view.x + 250 - f.stringWidth("SHIT, YOU DEAD") / 2, 
-                            view.y + 250 - f.getHeight() / 2 );
+                            "YOU ARE DEAD", 
+                            view.x + 250 - f.stringWidth("YOU ARE DEAD") / 2, 
+                            view.y + 250 - f.getHeight() / 2 + 10);
                     g.setFont(font.deriveFont(18f));
                     f = g.getFontMetrics();
                     g.drawString(

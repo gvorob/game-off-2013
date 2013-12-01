@@ -4,19 +4,32 @@
  */
 package hellboss;
 
+import javax.swing.JApplet;
+
 /**
  *
  * @author George Vorobyev <quaffle97@gmail.com>
  */
-public class HellBoss implements TimerListener, KeyEventListener, MouseEventListener
+public class HellBoss extends JApplet implements TimerListener, KeyEventListener, MouseEventListener
 {
     
     public static HellBoss s;
     
+    public void init()
+    {
+        appletInitialize();
+    }
+    public void start()
+    {
+        timer.start();
+    }
+    public void stop(){}
+    
     public static void main(String[] args) {
         
         s = new HellBoss();
-        long time = System.currentTimeMillis() - 1;
+        s.initialize();
+        //long time = System.currentTimeMillis() - 1;
         //while(true)
         //{
             //long temp = System.currentTimeMillis() - time;
@@ -33,6 +46,9 @@ public class HellBoss implements TimerListener, KeyEventListener, MouseEventList
     public World world;
     
     public HellBoss()
+    {}
+    
+    public void initialize()
     {
         screen = new Screen(500, 500, "HellBoss");
         timer = new Timer(20);
@@ -45,7 +61,21 @@ public class HellBoss implements TimerListener, KeyEventListener, MouseEventList
         mouse.addListener(this);
         
         world = new World(mouse);
+    }
+    
+    public void appletInitialize()
+    {
+        screen = Screen.createAppletScreen(500, 500, getContentPane());
+        timer = new Timer(20);
+        timer.addListener(this);
+        keys = new Keyboard();
+        mouse = new Mouse();
+        screen.c.addKeyListener(keys);
+        screen.c.addMouseListener(mouse);
+        screen.c.addMouseMotionListener(mouse);
+        mouse.addListener(this);
         
+        world = new World(mouse);
     }
     
     public void run(float t)

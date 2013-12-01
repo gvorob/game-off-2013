@@ -5,6 +5,7 @@
 package hellboss;
 
 import java.awt.Canvas;
+import java.awt.Container;
 import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -28,7 +29,14 @@ public class Screen implements ImageObserver
     public Canvas c;
     public BufferedImage buffer;
     
+    private Screen(){}
+    
     public Screen(int x, int y, String name)
+    {
+        init(x,y,name);
+    }
+    
+    public void init(int x, int y, String name)
     {
         f = new Frame(name);
         c = new Canvas();
@@ -56,6 +64,22 @@ public class Screen implements ImageObserver
         Insets i = f.getInsets();
         f.setSize(x + i.left + i.right, y + i.top + i.bottom);
         c.setVisible(true);
+    }
+    
+    public static Screen createAppletScreen(int x, int y, Container pane)
+    {
+        Screen temp = new Screen();
+        temp.c = new Canvas();
+        temp.c.setSize(x, y);
+        /*f.setCursor(
+                Toolkit.getDefaultToolkit().createCustomCursor(
+                new BufferedImage(1,1,BufferedImage.TYPE_INT_ARGB), 
+                new Point(), 
+                null));*/
+        temp.buffer = new BufferedImage(x, y, BufferedImage.TYPE_4BYTE_ABGR);
+        temp.c.setVisible(true);
+        pane.add(temp.c);
+        return temp;
     }
     
     public void clear()
