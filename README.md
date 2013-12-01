@@ -19,3 +19,5 @@ O for use map editor function
 0 (zero) for save map
 9 for printscreen+
 [ ] - = to change the size of walls to be added
+
+![screenshot](screenshot.png)
