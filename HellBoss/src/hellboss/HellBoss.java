@@ -50,7 +50,7 @@ public class HellBoss extends JApplet implements TimerListener, KeyEventListener
     
     public void initialize()
     {
-        screen = new Screen(500, 500, "HellBoss");
+        screen = new Screen(500, 500, "Atomic Garbage Collector");
         timer = new Timer(20);
         timer.addListener(this);
         keys = new Keyboard();
