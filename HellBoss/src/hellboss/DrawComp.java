@@ -14,6 +14,7 @@ import java.awt.image.BufferedImage;
  */
 public class DrawComp extends Component{
     float x, y;
+    public int z;
     
     
     public void draw(BufferedImage[] sprites, Point view, Graphics2D g)

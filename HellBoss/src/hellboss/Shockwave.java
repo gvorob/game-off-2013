@@ -20,7 +20,7 @@ public class Shockwave extends Projectile{
     
     public Shockwave(int dam, int damt, float impulse, Vector2 loc, int team, float duration, float minSize, float maxSize)
     {
-        super(dam,damt, loc, 0, team, new CircleDrawer(loc.x, loc.y, minSize, new Color(0, 100, 50)));
+        super(dam,damt, loc, 0, team, new CircleDrawer(loc.x, loc.y, minSize, new Color(0, 100, 50),true,8));
         
         this.duration = duration;
         this.minSize = minSize;

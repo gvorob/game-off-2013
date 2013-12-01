@@ -21,7 +21,7 @@ public class Bandit extends Enemy{
     
     protected void init(Vector2 loc)
     {
-        drawer = new SpriteDrawer(new SpriteData(0,64,0,64,64), -32, -32);
+        drawer = new SpriteDrawer(new SpriteData(0,64,0,64,64), -32, -32,6);
         drawer.move(loc);
         att = new Attackable(200);
         coll = new Collider(loc.clone(), 1f, att, Collider.density.SOFT, 5, 30, 5, 2);
@@ -38,6 +38,7 @@ public class Bandit extends Enemy{
     
     public void update(float t)
     {
+        super.update(t);
         drawer.setRotate(Angles.getAngle(Vector2.vecSubt(World.w.player.coll.location, coll.location)));
         att.update(t);
         if(target != null)

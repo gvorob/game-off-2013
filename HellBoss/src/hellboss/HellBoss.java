@@ -17,6 +17,7 @@ public class HellBoss extends JApplet implements TimerListener, KeyEventListener
     
     public void init()
     {
+        s = this;
         appletInitialize();
     }
     public void start()

@@ -18,22 +18,23 @@ public class SpriteDrawer extends DrawComp{
     SpriteData sprite;
     //boolean iso;
     
-    private void init(SpriteData s, int rx, int ry)
+    private void init(SpriteData s, int rx, int ry, int zlevel)
     {
         sprite = s;
         refx = rx;
         refy = ry;
         //iso = true;
+        z = zlevel;
     }
     
     public SpriteDrawer(SpriteData s)
     {
-        init(s,0,0);
+        init(s,0,0,0);
     }
     
-    public SpriteDrawer(SpriteData s, int rx, int ry)
+    public SpriteDrawer(SpriteData s, int rx, int ry, int zlevel)
     {
-        init(s,rx,ry);
+        init(s,rx,ry,zlevel);
     }
     
     //public SpriteData draw()

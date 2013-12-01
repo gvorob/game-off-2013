@@ -17,7 +17,7 @@ public class Golem extends Enemy{
     
     protected void init(Vector2 loc)
     {
-        drawer = new SpriteDrawer(new SpriteData(0,128,0,64,64), -32, -32);
+        drawer = new SpriteDrawer(new SpriteData(0,128,0,64,64), -32, -32,6);
         drawer.move(loc);
         att = new Attackable(400);
         coll = new Collider(loc.clone(), 1.6f, att, Collider.density.SOFT, 25, 80, 3, 2);
@@ -34,6 +34,7 @@ public class Golem extends Enemy{
     
     public void update(float t)
     {
+        super.update(t);
         att.update(t);
         if(target != null)
         {

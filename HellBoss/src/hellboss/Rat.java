@@ -19,7 +19,7 @@ public class Rat extends Enemy{
     
     protected void init(Vector2 loc)
     {
-        drawer = new SpriteDrawer(new SpriteData(0,192,0,64,64), -32, -32);
+        drawer = new SpriteDrawer(new SpriteData(0,192,0,64,64), -32, -32,6);
         drawer.move(loc);
         att = new Attackable(1);
         coll = new Collider(loc.clone(), 0.5f, att, Collider.density.SOFT, 2, 20, 7, 2);
@@ -39,6 +39,7 @@ public class Rat extends Enemy{
     
     public void update(float t)
     {
+        super.update(t);
         if(target!=null)drawer.setRotate(Angles.getAngle(Vector2.vecSubt(target, coll.location)));
         touchAttack.updateColl(coll);
         att.update(t);

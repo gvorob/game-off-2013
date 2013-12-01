@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jnlp spec="1.0+" codebase="" href="">
+    <information>
+        <title>HellBoss</title>
+        <vendor>quaffle97</vendor>
+        <offline-allowed/>
+    </information>
+    <resources>
+        <!-- Application Resources -->
+        <j2se version="1.6+" href=
+           "http://java.sun.com/products/autodl/j2se"/>
+        <jar href="HellBoss.jar"
+            main="true" />
+
+    </resources>
+    <application-desc
+         name="Atomic Garbage Collector"
+         main-class="hellboss.HellBoss"
+         width="500"
+         height="500">
+     </application-desc>
+     <update check="background"/>
+</jnlp>

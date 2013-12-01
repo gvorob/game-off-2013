@@ -14,7 +14,7 @@ public class Slime extends Enemy{
     
     protected void init(Vector2 loc)
     {
-        drawer = new SpriteDrawer(new SpriteData(0,0,0,64,64), -32, -32);
+        drawer = new SpriteDrawer(new SpriteData(0,0,0,64,64), -32, -32,6);
         drawer.move(loc);
         att = new Attackable(200);
         coll = new Collider(loc.clone(), 0.8f, att, Collider.density.SOFT, 5, 30, 5, 2);
@@ -34,6 +34,7 @@ public class Slime extends Enemy{
     
     public void update(float t)
     {
+        super.update(t);
         angle += r.nextFloat() * t * 2 - t;
         drawer.setRotate(angle);
         touchAttack.updateColl(coll);

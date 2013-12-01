@@ -131,10 +131,12 @@ public class World implements UIListener{
         tempSprite2[2] = new SpriteData(4, 600, 600, 300, 100);
         ui.add(new UIButton(new Rectangle(100, 250, 300, 100), 0, tempSprite, this, true, true));
         ui.add(new UIButton(new Rectangle(100, 375, 300, 100), 1, tempSprite2, this, true, true));
+        //Misc.prln("started menu");
     }
     
     private void startGame()
     {
+        //Misc.prln("1");
         mode = MODE_PLAY;
         
         drawComps = new ArrayList<DrawComp>();
@@ -146,34 +148,38 @@ public class World implements UIListener{
         mapColliders = new ArrayList<Collider>();
         Collider.colliders = colliders;
         
+        //Misc.prln("1");
         
-        map = new SpriteDrawer(new SpriteData(2, 0, 0, 1920, 1280), 0, 0);
+        map = new SpriteDrawer(new SpriteData(2, 0, 0, 1920, 1280), 0, 0,10);
         drawComps.add(map);
         player = new Player(new Vector2(60,60));
         can = new GooCan(new Vector2(-100,-100));
         controllers.add(can);
-        controllers.add(new Spawner(new Vector2(26,24),  3,Spawner.SLIME));
-        controllers.add(new Spawner(new Vector2(65,57),  3,Spawner.SLIME));
+        controllers.add(new Spawner(new Vector2(26,24),  4,Spawner.SLIME));
+        controllers.add(new Spawner(new Vector2(65,57),  4,Spawner.SLIME));
         controllers.add(new Spawner(new Vector2(46,71), 15, Spawner.BANDIT));
         controllers.add(new Spawner(new Vector2(60, 5), 15, Spawner.BANDIT));
         controllers.add(new Spawner(new Vector2(118, 51), 15, Spawner.BANDIT));
         controllers.add(new Spawner(new Vector2(15,45), 15, Spawner.GOLEM));
         controllers.add(new Spawner(new Vector2(87,69), 15, Spawner.GOLEM));
         controllers.add(new Spawner(new Vector2(111,27), 15, Spawner.GOLEM));
-        controllers.add(new Spawner(new Vector2( 8, 7), 15, Spawner.RAT));
-        controllers.add(new Spawner(new Vector2(19,76), 15, Spawner.RAT));
-        controllers.add(new Spawner(new Vector2(84,18), 15, Spawner.RAT));
+        controllers.add(new Spawner(new Vector2( 8, 7), 7, Spawner.RAT));
+        controllers.add(new Spawner(new Vector2(19,76), 7, Spawner.RAT));
+        controllers.add(new Spawner(new Vector2(84,18), 7, Spawner.RAT));
         controllers.add(player);
         Attackable.setPlayer(player);
         
+        //Misc.prln("1");
         
         colliders.add(new Collider(new Vector2(-10000,40), 10000, Collider.density.HARD));
         colliders.add(new Collider(new Vector2(60,-10000), 10000, Collider.density.HARD));
         colliders.add(new Collider(new Vector2(60,10080), 10000, Collider.density.HARD));
         colliders.add(new Collider(new Vector2(10120,40), 10000, Collider.density.HARD));
         
+        //Misc.prln("1");
         
         loadLevel("/in.txt");
+        //Misc.prln("1");
     }
     
     private void loadLevel(String fileName)
@@ -268,6 +274,7 @@ public class World implements UIListener{
     
     public void update(float time, Keyboard keys, Mouse m)//per-frame game updates
     {
+        //Misc.prln("updating");
         World.time += time;
         frames += 1;
         if(World.time > 1)
@@ -278,6 +285,7 @@ public class World implements UIListener{
         }
         if(mode == MODE_PLAY)
         {
+            //Misc.prln("updating game");
             updateWorld(time, keys, m);
         }
         if(mode == MODE_MENU)
@@ -400,7 +408,10 @@ public class World implements UIListener{
     {
         if(mode == MODE_PLAY)
         {   
+            //Misc.prln("drawing game");
             Point view = player.getView();
+            
+            //Misc.prln("drawing game2");
             drawWorld(b, view);
         }
         else if(mode == MODE_MENU)
@@ -423,15 +434,28 @@ public class World implements UIListener{
     
     public void drawWorld(BufferedImage b, Point view)
     {
+        
+            //Misc.prln("drawing game3");
         if(!DEBUG)
             {
+            //Misc.prln("1");
+            //Misc.prln(HellBoss.s == null);
+            //Misc.prln(HellBoss.s.screen == null);
+            //Misc.prln(HellBoss.s.screen.c == null);
+            //Misc.prln(HellBoss.s.screen.c.getSize() == null);
                 Dimension dim = HellBoss.s.screen.c.getSize();
+            //Misc.prln("2");
                 if(view.x < 0) view.x = 0;
+            //Misc.prln("3");
                 if(view.y < 0) view.y = 0;
+            //Misc.prln("4");
                 if(view.x + dim.width > worldWidth * 16) view.x = (int)(worldWidth * 16) - dim.width;
+            //Misc.prln("5");
                 if(view.y + dim.height > worldHeight * 16) view.y = (int)(worldHeight * 16) - dim.height;
+            //Misc.prln("6");
             }
 
+            //Misc.prln("a");
             Graphics2D g = b.createGraphics();
             g.translate(-1 * view.x, -1 * view.y);
             for(DrawComp d : drawComps)
@@ -454,6 +478,7 @@ public class World implements UIListener{
             g.fillRect(view.x + 494 - tempWidth, view.y, tempWidth + 6, 18);
             g.setColor(Color.BLACK);
             g.drawString(String.valueOf(player.canCount), view.x  + 497 - tempWidth, view.y  + 14);
+            //Misc.prln("b");
             if(DEBUG)
             {
                 g.setColor(Color.red);
@@ -483,6 +508,7 @@ public class World implements UIListener{
                             (int)(c.size * 2 * 16)
                             );
                 }
+                //Misc.prln("c");
                 for(Vector2 v: can.canSpawns)
                 {
                     g.setColor(Color.blue);
@@ -526,10 +552,14 @@ public class World implements UIListener{
                             view.y + 250 - f.getHeight() / 2  + 40);
 
                 }
+            //Misc.prln("d");
     }
             
     public void add(DrawComp d)
-    {drawComps.add(d);}
+    {drawComps.add(d);Collections.sort(drawComps, new Comparator<DrawComp>(){
+        public int compare(DrawComp a, DrawComp b)
+        {return b.z- a.z;}
+    });}
     public void add(UIRegion r)
     {ui.add(r);Collections.sort(ui, new Comparator<UIRegion>(){
         public int compare(UIRegion a, UIRegion b)

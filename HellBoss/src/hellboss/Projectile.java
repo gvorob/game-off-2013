@@ -34,12 +34,12 @@ public class Projectile extends ObjectController{
     
     public static Bullet BanditBullet(Vector2 vel, Vector2 loc)
     {
-        return new Bullet(vel, 100, 0, loc,0.1f, 1, 2,new SpriteDrawer(new SpriteData(3,64,0,64,64), -32, -32));
+        return new Bullet(vel, 100, 0, loc,0.1f, 1, 2,new SpriteDrawer(new SpriteData(3,64,0,64,64), -32, -32,2));
     }
     
     public static Bullet PlayerBullet(Vector2 vel, Vector2 loc)
     {
-        return new Bullet(vel, 100, 0, loc ,1f, 2, 1,new SpriteDrawer(new SpriteData(3,0,0,64,64), -32, -32));
+        return new Bullet(vel, 100, 0, loc ,1f, 2, 1,new SpriteDrawer(new SpriteData(3,0,0,64,64), -32, -32,2));
     }
     
     public static Shockwave createShockwave(Vector2 loc, int team)

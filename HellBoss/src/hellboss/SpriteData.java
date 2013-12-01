@@ -27,4 +27,9 @@ public class SpriteData {
     {
         g.drawImage(b[spriteS], x, y, x + spriteW, y + spriteH, spriteX, spriteY, spriteX + spriteW, spriteY + spriteH, null);
     }
+    
+    public SpriteData clone()
+    {
+        return new SpriteData(spriteS, spriteX, spriteY, spriteW, spriteH);
+    }
 }

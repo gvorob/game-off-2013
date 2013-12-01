@@ -22,7 +22,7 @@ public class GooCan extends ObjectController {
     
     public GooCan(Vector2 loc)
     {
-        drawer = new SpriteDrawer(new SpriteData(1, 64, 0, 64, 64), -32, -32);
+        drawer = new SpriteDrawer(new SpriteData(1, 64, 0, 64, 64), -32, -32,7);
         coll = new Collider(null, 1, Collider.density.NONE);
         canSpawns = new ArrayList<Vector2>();
         

@@ -38,20 +38,23 @@ public class Spawner extends ObjectController{
     
     public void spawn()
     {
-        switch(type)
+        if(Vector2.dist(World.w.player.coll.location, loc) > 25)
         {
-            case SLIME:
-                World.w.add(new Slime(loc));                
-                break;
-            case BANDIT:
-                World.w.add(new Bandit(loc));
-                break;
-            case GOLEM:
-                World.w.add(new Golem(loc));
-                break;
-            case RAT:
-                World.w.add(new Rat(loc));
-                break;
+            switch(type)
+            {
+                case SLIME:
+                    World.w.add(new Slime(loc));                
+                    break;
+                case BANDIT:
+                    World.w.add(new Bandit(loc));
+                    break;
+                case GOLEM:
+                    World.w.add(new Golem(loc));
+                    break;
+                case RAT:
+                    World.w.add(new Rat(loc));
+                    break;
+            }
         }
     }
 }

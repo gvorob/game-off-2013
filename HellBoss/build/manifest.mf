@@ -1,4 +1,4 @@
-Permissions: all-permissions
+Permissions: sandbox
 Codebase: *
-Application-Name: HellBoss
+Application-Name: Atomic Garbage Collector
 Main-Class: hellboss.HellBoss
