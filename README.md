@@ -9,3 +9,4 @@ Click to shoot
 
 ![screenshot](screenshot.png)
 
+Built from scratch in swing, handmade sprites, sound from http://www.bfxr.net/.
