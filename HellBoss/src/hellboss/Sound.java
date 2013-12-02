@@ -22,13 +22,14 @@ public class Sound {
    private Clip load(String soundFileName) {
         Clip clip = null;
         try {
-             AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(getClass().getResourceAsStream(soundFileName));
+             AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new BufferedInputStream(getClass().getResourceAsStream(soundFileName)));
              // Get a clip resource.
              clip = AudioSystem.getClip();
              // Open audio clip and load samples from the audio input stream.
              clip.open(audioInputStream);
         } catch (Exception e)
         {
+            Misc.prln(e.getLocalizedMessage());
           Misc.prln("ERROR LOADING SOUND");
         }
         return clip;
