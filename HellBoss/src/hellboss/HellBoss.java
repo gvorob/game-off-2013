@@ -51,6 +51,7 @@ public class HellBoss extends JApplet implements TimerListener, KeyEventListener
     
     public void initialize()
     {
+        Sound.init();
         screen = new Screen(500, 500, "Atomic Garbage Collector");
         timer = new Timer(20);
         timer.addListener(this);
@@ -66,6 +67,7 @@ public class HellBoss extends JApplet implements TimerListener, KeyEventListener
     
     public void appletInitialize()
     {
+        Sound.init();
         screen = Screen.createAppletScreen(500, 500, getContentPane());
         timer = new Timer(20);
         timer.addListener(this);

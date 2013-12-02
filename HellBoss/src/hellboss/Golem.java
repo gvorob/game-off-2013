@@ -20,6 +20,7 @@ public class Golem extends Enemy{
         drawer = new SpriteDrawer(new SpriteData(0,128,0,64,64), -32, -32,6);
         drawer.move(loc);
         att = new Attackable(400);
+        att.clip = Sound.hit2;
         coll = new Collider(loc.clone(), 1.6f, att, Collider.density.SOFT, 25, 80, 3, 2);
         World.w.add(att);
         World.w.add(drawer);
@@ -88,6 +89,7 @@ public class Golem extends Enemy{
     void fire()
     {
         World.w.add(Projectile.createShockwave(coll.location, 2));
+        Sound.play(Sound.shock);
 //        Vector2 temp = Vector2.vecSubt(World.w.player.coll.location, coll.location);
 //        temp.setLength(-15);
 //        coll.doImpulse(temp);

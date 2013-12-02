@@ -10,6 +10,7 @@ public class Mutation{
     public Mutation(Player p)
     {
         this.p = p;
+        lastMutation = Enemy.r.nextInt(2);
     }
     
     public void fire(Point click, Collider coll){
@@ -24,6 +25,7 @@ public class Mutation{
         World.w.add(p);
         //Projectile p = Projectile.createShockwave(coll.location.clone(), 1);
         //World.w.add(p);
+        Sound.play(Sound.pShoot);
     }
     
     public void update()
@@ -34,13 +36,16 @@ public class Mutation{
             p.att.health = 1;
             p.coll.size = 1.2f;
             World.w.add(Projectile.createExplosionShockwave(p.coll.location));
+            p.coll.mass = 45;
         }
     }
     
     public void mutate()
     {
-        lastMutation++;
+        Sound.play(Sound.mutate);
+        lastMutation += Enemy.r.nextInt(2) * 2 - 1;
         if(lastMutation > 2) lastMutation = 0;
+        if(lastMutation < 0) lastMutation = 2;
         
         switch(lastMutation)
         {

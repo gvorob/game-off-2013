@@ -152,7 +152,7 @@ public class World implements UIListener{
         
         map = new SpriteDrawer(new SpriteData(2, 0, 0, 1920, 1280), 0, 0,10);
         drawComps.add(map);
-        player = new Player(new Vector2(60,60));
+        player = new Player(new Vector2(58,38));
         can = new GooCan(new Vector2(-100,-100));
         controllers.add(can);
         controllers.add(new Spawner(new Vector2(26,24),  4,Spawner.SLIME));

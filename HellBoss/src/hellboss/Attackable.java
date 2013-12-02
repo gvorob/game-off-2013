@@ -7,6 +7,7 @@ package hellboss;
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.Rectangle;
+import javax.sound.sampled.Clip;
 
 /**
  *
@@ -21,6 +22,8 @@ public class Attackable extends Component{
     public float maxHealth;
     
     public float invincibilityTime;
+    
+    public Clip clip;
     
     
     public Attackable(int maxH)
@@ -50,6 +53,20 @@ public class Attackable extends Component{
             switch(damageType)
             {
                 case 0:
+                    if(clip.equals(Sound.die))
+                    {
+                        if(health == 1000)
+                            Sound.play(Sound.explode);
+                        else if(health == 1)
+                        {
+                            if(Enemy.r.nextInt(6) == 0)
+                                Sound.play(Sound.wscream);
+                            else
+                                Sound.play(clip);
+                        }
+                    }
+                    else
+                        Sound.play(clip);
                     health -= damage;
                     invincibilityTime = 0.2f;
                     return damage;

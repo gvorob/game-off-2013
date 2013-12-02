@@ -17,6 +17,7 @@ public class Slime extends Enemy{
         drawer = new SpriteDrawer(new SpriteData(0,0,0,64,64), -32, -32,6);
         drawer.move(loc);
         att = new Attackable(200);
+        att.clip = Sound.hit4;
         coll = new Collider(loc.clone(), 0.8f, att, Collider.density.SOFT, 5, 30, 5, 2);
         touchAttack = new TouchProjectile(30, 0, 10, coll);
         angle = r.nextFloat() * 2 * (float)Math.PI;

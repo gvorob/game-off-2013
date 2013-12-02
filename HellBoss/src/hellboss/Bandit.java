@@ -24,6 +24,7 @@ public class Bandit extends Enemy{
         drawer = new SpriteDrawer(new SpriteData(0,64,0,64,64), -32, -32,6);
         drawer.move(loc);
         att = new Attackable(200);
+        att.clip = Sound.hit1;
         coll = new Collider(loc.clone(), 1f, att, Collider.density.SOFT, 5, 30, 5, 2);
         World.w.add(att);
         World.w.add(drawer);
@@ -100,6 +101,7 @@ public class Bandit extends Enemy{
         World.w.add(p);
         
         cooldown = 3;
+        Sound.play(Sound.eShoot);
     }
     
 }

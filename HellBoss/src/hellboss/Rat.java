@@ -22,6 +22,7 @@ public class Rat extends Enemy{
         drawer = new SpriteDrawer(new SpriteData(0,192,0,64,64), -32, -32,6);
         drawer.move(loc);
         att = new Attackable(1);
+        att.clip = Sound.hit3;
         coll = new Collider(loc.clone(), 0.5f, att, Collider.density.SOFT, 2, 20, 7, 2);
         touchAttack = new TouchProjectile(30, 0, 10, coll);
         World.w.add(touchAttack);

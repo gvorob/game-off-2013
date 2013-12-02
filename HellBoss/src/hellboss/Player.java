@@ -37,6 +37,7 @@ public class Player extends ObjectController implements UIListener{
         drawer = new SpriteDrawer(temp,-32,-32,3);
         interactRegion = new UIRegion(new Rectangle(-50000, -50000, 100000, 100000), 0, this);
         att = new Attackable(1);
+        att.clip = Sound.die;
         coll = new Collider(loc,0.7f,att,Collider.density.HARD, 10f,500f,15f,1);
         mutation.mutate();
         //touchAttack = new TouchProjectile(100, 0, 100, coll);
