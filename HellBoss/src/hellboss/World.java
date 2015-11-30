@@ -365,8 +365,8 @@ public class World implements UIListener{
         }
 
 
-        //if(keys.getKeyPressed(KeyEvent.VK_P))
-        //{DEBUG = !DEBUG;}
+        if(keys.getKeyPressed(KeyEvent.VK_P))
+        {DEBUG = !DEBUG;}
         if(!player.att.alive() && keys.getKeyPressed(KeyEvent.VK_R))
         {
             startGame();
